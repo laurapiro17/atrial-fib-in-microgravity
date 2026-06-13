@@ -1,0 +1,71 @@
+{
+  "ground": {
+    "condition": "ground",
+    "shape": [
+      220,
+      220
+    ],
+    "area": 48400,
+    "ps_max": 3,
+    "ps_mean_second_half": 1.8,
+    "ps_density_x1e4": 0.37190082644628103,
+    "wall_seconds": 21.2
+  },
+  "microgravity": {
+    "condition": "microgravity",
+    "shape": [
+      286,
+      286
+    ],
+    "area": 81796,
+    "n_seeds": 6,
+    "per_seed": [
+      {
+        "seed": 7,
+        "ps_mean_second_half": 16.28,
+        "ps_max": 85
+      },
+      {
+        "seed": 100,
+        "ps_mean_second_half": 16.706666666666667,
+        "ps_max": 53
+      },
+      {
+        "seed": 101,
+        "ps_mean_second_half": 1.7733333333333334,
+        "ps_max": 7
+      },
+      {
+        "seed": 102,
+        "ps_mean_second_half": 1.4533333333333334,
+        "ps_max": 5
+      },
+      {
+        "seed": 103,
+        "ps_mean_second_half": 2.973333333333333,
+        "ps_max": 9
+      },
+      {
+        "seed": 104,
+        "ps_mean_second_half": 2.44,
+        "ps_max": 9
+      }
+    ],
+    "ps_mean_second_half": 6.937777777777778,
+    "ps_std_second_half": 6.775024577423418,
+    "ps_min_second_half": 1.4533333333333334,
+    "ps_max_second_half": 16.706666666666667,
+    "ps_density_x1e4": 0.8481805684602888
+  },
+  "headline": {
+    "metric": "phase-singularity density (rotors per 1e4 cells), 2nd-half mean",
+    "ground": 0.372,
+    "microgravity_mean": 0.848,
+    "density_fold_increase": 2.28,
+    "microgravity_seed_range_rotors": [
+      1.45,
+      16.71
+    ],
+    "note": "High substrate-dependent variance: a subset of fibrosis patterns tips into sustained fibrillation while others sustain few extra wavelets. This variance is itself the finding."
+  }
+}
