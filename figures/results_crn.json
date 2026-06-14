@@ -478,5 +478,135 @@
     ],
     "tail_mean_ps_mean": 0.0,
     "verdict": "CLEAN (no spurious PS once wave clears -> headline effect is real re-entry, not a detector artifact)"
+  },
+  "gravity_law": {
+    "mode": "smoke",
+    "cv_cm_s": 58.0,
+    "l0_cm": 8.0,
+    "g_star": 0.2158001067605845,
+    "rows": [
+      {
+        "g": 0.0,
+        "severity": 1.0,
+        "dilation": 1.3,
+        "apd90_ms": 140.61696351645952,
+        "wavelength_cm": 8.155783883954651,
+        "N_g": 1.2751686591966376
+      },
+      {
+        "g": 0.16,
+        "severity": 0.84,
+        "dilation": 1.252,
+        "apd90_ms": 162.8084780194596,
+        "wavelength_cm": 9.442891725128659,
+        "N_g": 1.0606920307416248
+      },
+      {
+        "g": 0.38,
+        "severity": 0.62,
+        "dilation": 1.186,
+        "apd90_ms": 199.1541619417825,
+        "wavelength_cm": 11.550941392623384,
+        "N_g": 0.8214049121623271
+      },
+      {
+        "g": 0.5,
+        "severity": 0.5,
+        "dilation": 1.15,
+        "apd90_ms": 220.91490239981866,
+        "wavelength_cm": 12.813064339189483,
+        "N_g": 0.7180171547146048
+      },
+      {
+        "g": 0.8,
+        "severity": 0.19999999999999996,
+        "dilation": 1.06,
+        "apd90_ms": 268.4453165456224,
+        "wavelength_cm": 15.569828359646099,
+        "N_g": 0.5446431267012856
+      },
+      {
+        "g": 1.0,
+        "severity": 0.0,
+        "dilation": 1.0,
+        "apd90_ms": 294.0084948603244,
+        "wavelength_cm": 17.052492701898817,
+        "N_g": 0.4691396231536983
+      }
+    ]
+  },
+  "mechanism_panel": {
+    "mode": "full",
+    "grid": 140,
+    "n_seeds": 4,
+    "total_ms": 700.0,
+    "mechanisms": {
+      "ground": {
+        "burden_mean": 0.0,
+        "burden_ci95": [
+          0.0,
+          0.0
+        ],
+        "per_seed_burden": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "electrical": {
+        "burden_mean": 0.0,
+        "burden_ci95": [
+          0.0,
+          0.0
+        ],
+        "per_seed_burden": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "fibrosis": {
+        "burden_mean": 234.5,
+        "burden_ci95": [
+          29.0,
+          454.0
+        ],
+        "per_seed_burden": [
+          586.0,
+          0.0,
+          294.0,
+          58.0
+        ]
+      },
+      "dilation": {
+        "burden_mean": 0.0,
+        "burden_ci95": [
+          0.0,
+          0.0
+        ],
+        "per_seed_burden": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "combined": {
+        "burden_mean": 1085.0,
+        "burden_ci95": [
+          833.0,
+          1345.0
+        ],
+        "per_seed_burden": [
+          792.0,
+          1502.0,
+          1172.0,
+          874.0
+        ]
+      }
+    },
+    "wall_seconds": 2457.9
   }
 }
