@@ -1,5 +1,9 @@
 # Atrial fibrillation in microgravity — an in-silico model 🛰️🫀
 
+[![tests](https://github.com/laurapiro17/atrial-fib-in-microgravity/actions/workflows/tests.yml/badge.svg)](https://github.com/laurapiro17/atrial-fib-in-microgravity/actions/workflows/tests.yml)
+[![python](https://img.shields.io/badge/python-3.9%20%7C%203.11%20%7C%203.12-blue.svg)](https://www.python.org/)
+[![license](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+
 *Does the atrial remodelling caused by spaceflight lower the threshold for, and sustain,
 fibrillatory re-entry?*
 
