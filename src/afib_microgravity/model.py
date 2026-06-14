@@ -141,3 +141,35 @@ class AtrialSheet:
     def stimulate(self, mask, value: float = 1.0):
         """Raise ``u`` to ``value`` wherever ``mask`` is True (a stimulus)."""
         self.u[mask] = value
+
+
+class MonodomainSheet:
+    """Operator-split monodomain sheet: explicit reaction (CellModel) then explicit
+    anisotropic diffusion. The cell model returns dV/dt from reaction and does not
+    mutate V; this sheet owns the membrane update V += dt*(reaction + diffusion).
+    Stimulate via cell.stimulate(mask, value) before/between steps."""
+
+    def __init__(self, cell, diffusion, dt=0.01):
+        self.cell = cell
+        self.diff = diffusion
+        self.dt = float(dt)
+        self.t = 0.0
+        self._check_stability()
+
+    def _check_stability(self):
+        bound = self.diff.dx ** 2 / (4.0 * max(self.diff.Dmax, 1e-12))
+        if self.dt > bound:
+            raise ValueError(
+                f"dt={self.dt} exceeds explicit diffusion stability bound {bound:.4g}"
+            )
+
+    def step(self):
+        dV_react = self.cell.reaction_step(self.dt)
+        V = self.cell.V + self.dt * dV_react
+        V = V + self.dt * self.diff.apply(V)
+        self.cell.set_V(V)
+        self.t += self.dt
+
+    def run(self, n_steps):
+        for _ in range(int(n_steps)):
+            self.step()

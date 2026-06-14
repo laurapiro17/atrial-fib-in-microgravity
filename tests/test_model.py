@@ -128,3 +128,31 @@ def test_dt_stability_guard():
     """An over-large dt must be rejected up front rather than blowing up silently."""
     with pytest.raises(ValueError):
         AtrialSheet(shape=(20, 20), dt=1.0, params=APParams(D=1.0))
+
+
+import numpy as np
+from afib_microgravity.cell_model import APCell
+from afib_microgravity.diffusion import AnisotropicDiffusion
+from afib_microgravity.model import MonodomainSheet
+
+
+def test_monodomain_propagates_a_planar_wave():
+    shape = (40, 40)
+    cell = APCell(shape=shape)
+    diff = AnisotropicDiffusion(shape, d_long=1.0, d_trans=1.0,
+                                theta=np.zeros(shape), dx=1.0)
+    sheet = MonodomainSheet(cell, diff, dt=0.01)
+    mask = np.zeros(shape, dtype=bool); mask[:, :3] = True
+    cell.stimulate(mask, value=1.0)
+    front0 = int((cell.V > 0.5).sum())
+    sheet.run(400)
+    assert int((cell.V > 0.5).sum()) > front0  # wave advanced into the sheet
+
+
+def test_monodomain_rejects_unstable_dt():
+    shape = (10, 10)
+    cell = APCell(shape=shape)
+    diff = AnisotropicDiffusion(shape, d_long=1.0, d_trans=1.0,
+                                theta=np.zeros(shape), dx=1.0)
+    with pytest.raises(ValueError):
+        MonodomainSheet(cell, diff, dt=10.0)  # violates dx^2/(4 Dmax)
