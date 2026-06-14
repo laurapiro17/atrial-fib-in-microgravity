@@ -107,34 +107,42 @@ def baseline_crn_params() -> CRNParams:
 
 
 def microgravity_crn_params(severity: float = 1.0) -> CRNParams:
-    """AF-type electrical remodelling as observed post-spaceflight.
+    """AF-type electrical remodelling as observed in chronic atrial fibrillation
+    and hypothesised post-spaceflight.
 
-    Maps microgravity exposure onto CRN ionic conductances following
-    the literature-anchored AF remodelling pattern (Khine 2018 and
-    supporting atrial electrophysiology literature):
+    Maps the substrate onto CRN ionic conductances following the canonical
+    AF electrical-remodelling pattern (Courtemanche et al. 1999 "AF" variant;
+    Bosch 1999 / Workman 2001 human-atrial AF voltage-clamp data), which is
+    the change set needed to collapse the action-potential duration enough for
+    re-entry to fit a feasible sheet:
 
-    * **ICaL** (g_CaL) reduced  → shortened plateau, shorter APD.
-    * **Ito**  (g_to)  reduced  → less early repolarisation reserve.
+    * **ICaL** (g_CaL) strongly reduced → loss of the plateau, the dominant
+      APD-shortening lever (the canonical AF reduction is ~65-70%).
+    * **Ito**  (g_to)  reduced → less early-repolarisation reserve.
     * **IKur** (g_Kur_scale) reduced → less sustained outward K current.
-    * **INa**  (g_Na)  unchanged.
-    * **IKr**  (g_Kr)  unchanged.
+    * **IK1**  (g_K1)  increased → faster terminal repolarisation and a more
+      hyperpolarised, excitable resting state (a hallmark of AF remodelling).
+    * **INa**  (g_Na)  unchanged → CV preserved, so the wavelength shortens
+      almost entirely through APD.
 
-    All three reductions shorten atrial refractoriness and favour re-entry
-    — the electrophysiological signature associated with increased AF
-    vulnerability post-spaceflight.
+    Together these collapse atrial APD90 from ~300 ms (baseline) to ~120-160 ms,
+    shortening the wavelength to a few centimetres so a rotor can be hosted on a
+    laptop-feasible sheet — the electrophysiological signature of an
+    AF-vulnerable substrate.
 
     Parameters
     ----------
     severity:
-        0 → recovers baseline exactly; 1 → halves ICaL, Ito, and IKur.
+        0 → recovers baseline exactly; 1 → full canonical AF remodelling
+        (ICaL -70%, Ito -50%, IKur -50%, IK1 +100%).
     """
     base = CRNParams()
-    scale = 1.0 - 0.5 * severity
     return dataclasses.replace(
         base,
-        g_CaL=base.g_CaL * scale,
-        g_to=base.g_to * scale,
-        g_Kur_scale=base.g_Kur_scale * scale,
+        g_CaL=base.g_CaL * (1.0 - 0.70 * severity),
+        g_to=base.g_to * (1.0 - 0.50 * severity),
+        g_Kur_scale=base.g_Kur_scale * (1.0 - 0.50 * severity),
+        g_K1=base.g_K1 * (1.0 + 1.0 * severity),
     )
 
 
@@ -146,13 +154,18 @@ def make_condition_crn(name: str, base_shape=(200, 200), seed: int = 0):
     ``"ground"``       : baseline CRN kinetics, homogeneous diffusion.
     ``"microgravity"`` : dilated tissue, AF-remodelled kinetics, fibrotic coupling.
     """
+    # d_long calibrated so the planar conduction velocity is ~58 cm/s
+    # (physiological human atrium, target band 55-65); d_trans gives a ~3:1
+    # anisotropy ratio. See experiments/calibrate_cv.py for the CV(d_long) sweep.
+    D_LONG = 0.15
+    D_TRANS = 0.05
     if name == "ground":
         shape = base_shape
         cell = CRNCell(shape=shape, params=baseline_crn_params())
         diff = AnisotropicDiffusion(
             shape=shape,
-            d_long=0.06,
-            d_trans=0.02,
+            d_long=D_LONG,
+            d_trans=D_TRANS,
             theta=np.zeros(shape),
             dx=0.25,
             coupling=None,
@@ -165,8 +178,8 @@ def make_condition_crn(name: str, base_shape=(200, 200), seed: int = 0):
         coupling = correlated_fibrosis(shape, density=0.3, corr_len=4.0, seed=seed)
         diff = AnisotropicDiffusion(
             shape=shape,
-            d_long=0.06,
-            d_trans=0.02,
+            d_long=D_LONG,
+            d_trans=D_TRANS,
             theta=np.zeros(shape),
             dx=0.25,
             coupling=coupling,

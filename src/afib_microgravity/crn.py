@@ -19,6 +19,13 @@ from dataclasses import dataclass
 import numpy as np
 
 from .cell_model import CellModel
+from .crn_numba import HAVE_NUMBA, reaction_kernel
+
+# Names of the 21 mutable state arrays, in the order the Numba kernel expects.
+_STATE_NAMES = (
+    "m", "h", "j", "oa", "oi", "ua", "ui", "xr", "xs", "d", "f", "fca",
+    "u_rel", "v_rel", "w_rel", "Nai", "Ki", "Cai", "Ca_up", "Ca_rel",
+)
 
 
 @dataclass
@@ -98,9 +105,12 @@ def _full(shape, value):
 class CRNCell(CellModel):
     """CRN 1998 human-atrial kinetics behind the CellModel interface."""
 
-    def __init__(self, shape=(200, 200), params: CRNParams | None = None):
+    def __init__(self, shape=(200, 200), params: CRNParams | None = None,
+                 use_numba: bool | None = None):
         self.p = params or CRNParams()
         self.shape = shape
+        # use_numba=None -> auto (on when numba importable); explicit overrides.
+        self.use_numba = HAVE_NUMBA if use_numba is None else bool(use_numba)
         for name, val in _IC.items():
             if name == "V":
                 self._Vm = _full(shape, val)
@@ -120,6 +130,34 @@ class CRNCell(CellModel):
 
     # ---- kinetics -----------------------------------------------------------
     def reaction_step(self, dt: float, I_stim: float = 0.0) -> np.ndarray:
+        if self.use_numba:
+            return self._reaction_step_numba(dt, I_stim)
+        return self._reaction_step_numpy(dt, I_stim)
+
+    def _reaction_step_numba(self, dt: float, I_stim: float = 0.0) -> np.ndarray:
+        """Dispatch the per-cell kinetics to the compiled Numba kernel.
+
+        State arrays are mutated in place through flat (ravel) views; only dV/dt
+        is returned (reshaped to the grid), matching the NumPy path's contract.
+        """
+        p = self.p
+        flat = [self._Vm.reshape(-1)] + [
+            getattr(self, n).reshape(-1) for n in _STATE_NAMES
+        ]
+        dVdt = reaction_kernel(
+            *flat, float(dt), float(I_stim),
+            p.R, p.T, p.F, p.Cm, p.Nao, p.Ko, p.Cao,
+            p.g_Na, p.g_K1, p.g_to, p.g_Kur_scale, p.g_Kr, p.g_Ks, p.g_CaL,
+            p.g_bCa, p.g_bNa,
+            p.I_NaK_max, p.Km_Nai, p.Km_Ko, p.I_NaCa_max, p.K_mNa, p.K_mCa,
+            p.K_sat, p.gamma, p.I_pCa_max, p.Km_pCa, p.K_rel, p.tau_tr,
+            p.I_up_max, p.K_up, p.Ca_up_max,
+            p.CMDN_max, p.TRPN_max, p.CSQN_max, p.Km_CMDN, p.Km_TRPN, p.Km_CSQN,
+            p.Vi, p.Vup, p.Vrel, p.K_Q10,
+        )
+        return dVdt.reshape(self.shape)
+
+    def _reaction_step_numpy(self, dt: float, I_stim: float = 0.0) -> np.ndarray:
         p = self.p
         V = self._Vm
         RTF = p.R * p.T / p.F
