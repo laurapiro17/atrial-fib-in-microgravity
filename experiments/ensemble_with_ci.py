@@ -65,9 +65,15 @@ D_LONG = 0.15           # calibrated planar CV ~58 cm/s (see make_condition_crn)
 
 # S1-S2 cross-field protocol timing (ms). S2 is delivered s2_delay_ms after S1.
 S2_DELAY_MS = 160.0
-# Blank-out window after S2 before metrics start (ms): the S1/S2 wavefronts spike
-# the phase proxy and must be excluded from the analysis window.
-BLANK_AFTER_S2_MS = 100.0
+# A planar stimulus edge briefly spikes the phase proxy to a huge spurious count
+# (~150-200) -- this is a wavefront artifact, NOT re-entry. Genuine wavebreak in
+# the fibrotic substrate gives a MODEST count (single digits to low tens). We
+# therefore reject samples whose PS exceeds ARTIFACT_PS_THRESHOLD, and ignore the
+# first MIN_ANALYSIS_MS (the initial S1 edge), rather than blanking by time. The
+# headline observable is the resulting *wavebreak burden*: how much the substrate
+# fragments propagating wavefronts into phase singularities (rotor cores).
+ARTIFACT_PS_THRESHOLD = 40
+MIN_ANALYSIS_MS = 40.0
 
 APD_NOTE = ("microgravity = AF-remodelled CRN, APD90 ~135 ms; ground = baseline "
             "CRN, APD90 ~294 ms")
@@ -134,40 +140,39 @@ def run_seed(condition, base_shape, seed, dt, total_ms, sample_every):
 
 
 def window_metrics(ps_series, times, s2_ms, total_ms, area):
-    """Transient-vulnerability metrics over the analysis window
-    [s2_ms + BLANK_AFTER_S2_MS, total_ms]."""
-    win_start = s2_ms + BLANK_AFTER_S2_MS
-    in_win = times >= win_start
-    w_ps = ps_series[in_win]
-    w_t = times[in_win]
+    """Wavebreak-burden metrics over the artifact-rejected trace.
+
+    We keep samples with ``times >= MIN_ANALYSIS_MS`` and
+    ``ps <= ARTIFACT_PS_THRESHOLD`` (the rest are wavefront-edge artifacts). On
+    this clean series we report the peak and mean phase-singularity (wavebreak)
+    count, the integrated wavebreak burden (PS-ms, a rotor-lifetime surrogate),
+    and the active fraction of time (any wavebreak present)."""
+    valid = (times >= MIN_ANALYSIS_MS) & (ps_series <= ARTIFACT_PS_THRESHOLD)
+    w_ps = ps_series[valid]
+    w_t = times[valid]
 
     if w_ps.size == 0:
         return {
-            "peak_ps": 0, "mean_ps_window": 0.0,
-            "time_to_extinction_ms": float(total_ms - s2_ms),
-            "ps_density_peak_x1e4": 0.0, "sustained_af": False,
-            "window_start_ms": win_start, "window_n": 0,
+            "peak_ps": 0, "mean_ps": 0.0, "break_burden_ps_ms": 0.0,
+            "active_frac": 0.0, "ps_density_peak_x1e4": 0.0,
+            "sustained_af": False, "n_valid": 0,
         }
 
     peak = int(w_ps.max())
     mean_ps = float(w_ps.mean())
-
-    # time_to_extinction: time from S2 until PS first hits 0 and stays 0 to end.
-    tte = float(total_ms - s2_ms)  # never extinguishes within window
-    zero = w_ps == 0
-    for k in range(w_ps.size):
-        if zero[k] and zero[k:].all():
-            tte = float(w_t[k] - s2_ms)
-            break
+    # integrated wavebreak burden (PS-ms): sum(PS) * sample spacing.
+    dt_samp = float(np.median(np.diff(w_t))) if w_t.size > 1 else 0.0
+    burden = float(w_ps.sum() * dt_samp)
+    active_frac = float((w_ps > 0).mean())
 
     return {
         "peak_ps": peak,
-        "mean_ps_window": mean_ps,
-        "time_to_extinction_ms": tte,
+        "mean_ps": mean_ps,
+        "break_burden_ps_ms": burden,
+        "active_frac": active_frac,
         "ps_density_peak_x1e4": ps_density(peak, area),
         "sustained_af": bool(is_sustained_af(w_ps, window_frac=0.5, threshold=2)),
-        "window_start_ms": win_start,
-        "window_n": int(w_ps.size),
+        "n_valid": int(w_ps.size),
     }
 
 
@@ -197,22 +202,24 @@ def save_ps_figure(curves, s2_ms, total_ms):
     os.makedirs(FIG, exist_ok=True)
     colors = {"ground": "#1b4079", "microgravity": "#c1121f"}
     fig, ax = plt.subplots(figsize=(6.5, 4))
-    win_start = s2_ms + BLANK_AFTER_S2_MS
-    ax.axvspan(win_start, total_ms, color="0.85", alpha=0.5,
-               label=f"analysis window (>{win_start:.0f} ms)")
+    # Clip the display at the artifact threshold so the brief wavefront-edge spike
+    # (~150-200 PS at each stimulus) doesn't crush the genuine wavebreak signal.
     ax.axvline(s2_ms, color="0.4", ls="--", lw=1, label=f"S2 ({s2_ms:.0f} ms)")
+    ax.axhline(ARTIFACT_PS_THRESHOLD, color="0.7", ls=":", lw=1,
+               label=f"artifact cutoff ({ARTIFACT_PS_THRESHOLD})")
     for cond, data in curves.items():
         t = data["times"]
-        stack = np.vstack(data["series"])
+        stack = np.clip(np.vstack(data["series"]), 0, ARTIFACT_PS_THRESHOLD)
         mean = stack.mean(axis=0)
         ax.plot(t, mean, color=colors.get(cond, "k"), label=f"{cond} (mean)")
         if stack.shape[0] > 1:
             sd = stack.std(axis=0)
             ax.fill_between(t, mean - sd, mean + sd, color=colors.get(cond, "k"),
                             alpha=0.18)
+    ax.set_ylim(0, ARTIFACT_PS_THRESHOLD)
     ax.set_xlabel("time (ms)")
-    ax.set_ylabel("phase singularities")
-    ax.set_title("Transient re-entrant vulnerability: PS(t) after S1-S2")
+    ax.set_ylabel("phase singularities (wavebreak)")
+    ax.set_title("Transient re-entrant vulnerability: wavebreak after S1-S2")
     ax.legend(fontsize=8)
     fig.tight_layout()
     fig.savefig(os.path.join(FIG, "ensemble_ps.png"), dpi=120)
@@ -260,7 +267,9 @@ def main():
         "claim": "transient re-entrant vulnerability (NOT sustained AF)",
         "base_shape": list(base_shape), "n_seeds": n_seeds,
         "total_ms": total_ms, "dt": dt, "sample_every": sample_every,
-        "s2_delay_ms": S2_DELAY_MS, "blank_after_s2_ms": BLANK_AFTER_S2_MS,
+        "s2_delay_ms": S2_DELAY_MS,
+        "artifact_ps_threshold": ARTIFACT_PS_THRESHOLD,
+        "min_analysis_ms": MIN_ANALYSIS_MS,
         "d_long": D_LONG, "apd_note": APD_NOTE,
         "conditions": {},
     }
@@ -271,7 +280,7 @@ def main():
 
     for cond in conditions:
         per_seed = []
-        means, ttes = [], []
+        burdens, peaks = [], []
         series_list, common_times = [], None
         last_V, last_shape = None, None
         for seed in seeds:
@@ -284,47 +293,47 @@ def main():
             m["shape"] = list(shape)
             m["wall_seconds"] = round(time.time() - t0, 2)
             per_seed.append(m)
-            means.append(m["mean_ps_window"])
-            ttes.append(m["time_to_extinction_ms"])
+            burdens.append(m["break_burden_ps_ms"])
+            peaks.append(float(m["peak_ps"]))
             series_list.append(ps_series)
             common_times = times
             last_V, last_shape = V_final, shape
             print(f"  [{cond} seed={seed}] peak={m['peak_ps']} "
-                  f"mean_win={m['mean_ps_window']:.2f} "
-                  f"tte={m['time_to_extinction_ms']:.0f}ms "
-                  f"dens_peak={m['ps_density_peak_x1e4']:.2f} "
-                  f"sustained={m['sustained_af']} ({m['wall_seconds']}s)")
+                  f"mean_ps={m['mean_ps']:.2f} "
+                  f"burden={m['break_burden_ps_ms']:.0f}PS·ms "
+                  f"active={m['active_frac']:.2f} ({m['wall_seconds']}s)")
 
-        mean_ps_mu, mean_ps_lo, mean_ps_hi = bootstrap_ci(
-            means, n_boot=n_boot, alpha=0.05, seed=0)
-        tte_mu, tte_lo, tte_hi = bootstrap_ci(
-            ttes, n_boot=n_boot, alpha=0.05, seed=0)
+        burden_mu, burden_lo, burden_hi = bootstrap_ci(
+            burdens, n_boot=n_boot, alpha=0.05, seed=0)
+        peak_mu, peak_lo, peak_hi = bootstrap_ci(
+            peaks, n_boot=n_boot, alpha=0.05, seed=0)
         results["conditions"][cond] = {
             "per_seed": per_seed,
-            "mean_ps_window_mean": mean_ps_mu,
-            "mean_ps_window_ci95": [mean_ps_lo, mean_ps_hi],
-            "time_to_extinction_ms_mean": tte_mu,
-            "time_to_extinction_ms_ci95": [tte_lo, tte_hi],
-            "n_sustained": int(sum(d["sustained_af"] for d in per_seed)),
+            "break_burden_ps_ms_mean": burden_mu,
+            "break_burden_ps_ms_ci95": [burden_lo, burden_hi],
+            "peak_ps_mean": peak_mu,
+            "peak_ps_ci95": [peak_lo, peak_hi],
+            "n_seeds_with_wavebreak": int(sum(d["peak_ps"] > 0 for d in per_seed)),
         }
         curves[cond] = {"times": common_times, "series": series_list}
         save_snapshot(last_V, cond, total_ms, snapshots[cond])
-        print(f"[{cond}] mean_ps_window={mean_ps_mu:.2f} "
-              f"95%CI=[{mean_ps_lo:.2f}, {mean_ps_hi:.2f}]  "
-              f"tte={tte_mu:.0f}ms 95%CI=[{tte_lo:.0f}, {tte_hi:.0f}]  "
-              f"sustained={results['conditions'][cond]['n_sustained']}/{n_seeds}")
+        print(f"[{cond}] burden={burden_mu:.0f}PS·ms "
+              f"95%CI=[{burden_lo:.0f}, {burden_hi:.0f}]  "
+              f"peak={peak_mu:.1f} 95%CI=[{peak_lo:.1f}, {peak_hi:.1f}]  "
+              f"seeds_with_break="
+              f"{results['conditions'][cond]['n_seeds_with_wavebreak']}/{n_seeds}")
 
-    # fold-increase headline on mean_ps_window (guard against zero ground value).
-    g = results["conditions"]["ground"]["mean_ps_window_mean"]
-    u = results["conditions"]["microgravity"]["mean_ps_window_mean"]
+    # fold-increase headline on wavebreak burden (guard against zero ground value).
+    g = results["conditions"]["ground"]["break_burden_ps_ms_mean"]
+    u = results["conditions"]["microgravity"]["break_burden_ps_ms_mean"]
     if g > 1e-9:
         results["fold_increase"] = round(u / g, 3)
-        results["fold_increase_note"] = "microgravity / ground mean_ps_window"
+        results["fold_increase_note"] = "microgravity / ground wavebreak burden"
     else:
         results["fold_increase"] = None
         results["fold_increase_note"] = (
-            f"ground mean_ps_window ~0 ({g:.3g}); fold undefined, "
-            f"microgravity mean_ps_window={u:.3g}")
+            f"ground wavebreak burden ~0 ({g:.3g}); fold undefined (healthy tissue "
+            f"conducts cleanly), microgravity burden={u:.3g} PS·ms")
     results["total_wall_seconds"] = round(time.time() - t_start, 1)
 
     save_ps_figure(curves, S2_DELAY_MS, total_ms)
