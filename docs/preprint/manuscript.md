@@ -13,7 +13,7 @@
 
 **Methods.** We built a 2-D monodomain model of human atrial tissue using the Courtemanche–Ramirez–Nattel (CRN) ionic action-potential model, with fibre-anisotropic conduction calibrated to a physiological longitudinal conduction velocity (≈58 cm/s). Microgravity remodelling was represented as (i) AF-type ionic remodelling (reduced I_CaL, I_to, I_Kur; increased I_K1), which shortened the action-potential duration (APD₉₀) from ≈294 ms to ≈135 ms; (ii) spatially correlated interstitial fibrosis (low-coupling Gaussian-random-field patches); and (iii) chamber dilation. An S1–S2 cross-field protocol probed re-entrant vulnerability across an ensemble of fibrosis realisations; we quantified wavefront fragmentation as the burden of phase singularities (PS), with bootstrap confidence intervals.
 
-**Results.** [TO FILL FROM ENSEMBLE: ground wavebreak burden = __ PS·ms (95% CI __–__); microgravity = __ PS·ms (95% CI __–__); seeds with wavebreak __/10 vs __/10; peak PS ground __ vs microgravity __.] Healthy ("ground") tissue conducted the induced wavefronts cleanly, with negligible phase-singularity formation, whereas the microgravity-remodelled fibrotic substrate fragmented propagating wavefronts into transient phase singularities (rotor cores) — the substrate of re-entry.
+**Results.** Across a 10-seed ensemble, healthy ("ground") tissue conducted the induced wavefronts cleanly (wavebreak burden 0 PS·ms; 0/10 seeds), whereas the microgravity-remodelled fibrotic substrate fragmented propagating wavefronts into transient phase singularities (rotor cores) — wavebreak burden 1192 PS·ms (95% CI 1031–1319) in 10/10 seeds. Two controls (a detector-specificity test and an artifact control without induced re-entry) confirm the effect is genuine wave fragmentation, not a detection artifact.
 
 **Conclusions.** In this minimal but physiologically grounded model, microgravity-type atrial remodelling increases susceptibility to wavefront fragmentation and transient re-entry without producing sustained fibrillation — consistent with the clinical observation of increased electrophysiological vulnerability but no overt AF in astronauts. The model is a transparent, reproducible, hypothesis-generating tool for spaceflight cardiac-arrhythmia risk.
 
@@ -65,12 +65,14 @@ The CRN cell reproduced human atrial action-potential biomarkers (Section 2.1). 
 
 ### 3.2 Re-entrant vulnerability
 
-[TO FILL FROM `figures/results_crn.json["ensemble"]`:]
-- Ground wavebreak burden: __ PS·ms (95% CI __–__); peak PS __; seeds with wavebreak __/10.
-- Microgravity wavebreak burden: __ PS·ms (95% CI __–__); peak PS __; seeds with wavebreak __/10.
-- Fold change / qualitative statement: __.
+Across a 10-seed fibrosis ensemble (160×160 sheet, 800 ms, S1–S2 induction):
+- **Ground**: wavebreak burden 0 PS·ms (95% CI 0–0); peak PS 0; **0/10** seeds with wavebreak.
+- **Microgravity**: wavebreak burden **1192 PS·ms (95% CI 1031–1319)**; peak PS 17.9 (95% CI 14.8–21.2); **10/10** seeds with wavebreak.
+- The fold change is undefined (ground = 0): **every** microgravity realisation fragmented the wavefront, **no** ground realisation did.
 
-Healthy tissue conducted the induced wavefronts cleanly (negligible phase-singularity formation). The microgravity-remodelled fibrotic substrate fragmented wavefronts into transient phase singularities. [Figure 2: PS(t) ground vs microgravity with bootstrap band. Figure 3: late-state V snapshots — quiescent ground vs fragmented microgravity.]
+Healthy tissue conducted the induced wavefronts cleanly (zero phase-singularity formation in every realisation). The microgravity-remodelled fibrotic substrate fragmented wavefronts into transient phase singularities in every realisation. [Figure 2: PS(t) ground vs microgravity with bootstrap band. Figure 3: late-state V snapshots — quiescent ground vs fragmented microgravity.]
+
+**Validation that the effect is real, not a detection artifact.** (i) The phase-singularity detector was verified to return exactly 1 on a single synthetic spiral and 0 on planar and static-structural-step fields (`tests/test_ps_detector.py`). (ii) An artifact control evolved the microgravity fibrotic substrate under a single S1 wave with **no** re-entry induction: once the wave cleared, the phase-singularity count returned to **zero** in all seeds — confirming that the headline count reflects genuine wave fragmentation rather than singularities pinned to fibrosis edges.
 
 ### 3.3 Transience
 

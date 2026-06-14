@@ -1,149 +1,153 @@
-# Atrial fibrillation in microgravity — an in-silico model 🛰️🫀
+# Atrial fibrillation in microgravity — an in-silico human-atrial model 🛰️🫀
 
 [![tests](https://github.com/laurapiro17/atrial-fib-in-microgravity/actions/workflows/tests.yml/badge.svg)](https://github.com/laurapiro17/atrial-fib-in-microgravity/actions/workflows/tests.yml)
 [![python](https://img.shields.io/badge/python-3.9%20%7C%203.11%20%7C%203.12-blue.svg)](https://www.python.org/)
 [![license](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-*Does the atrial remodelling caused by spaceflight lower the threshold for, and sustain,
-fibrillatory re-entry?*
+*Does the atrial remodelling caused by spaceflight increase the tissue's vulnerability
+to re-entry?*
 
-A compact, tested **reaction–diffusion** model of an atrial tissue sheet that asks an
-original question at the intersection of **cardiac electrophysiology** and **space
-medicine**: when microgravity remodels the atrium — dilating it, seeding fibrosis, and
-shortening refractoriness — how does the dynamics of atrial fibrillation (AF) change?
+A tested, reproducible 2-D model of **human atrial tissue** at the intersection of
+**cardiac electrophysiology** and **space medicine**. It uses the validated
+**Courtemanche–Ramirez–Nattel (CRN)** ionic action-potential model on a fibre-oriented
+monodomain sheet, and asks whether microgravity-type remodelling — dilation, fibrosis,
+shortened refractoriness — makes the atrium fragment wavefronts into re-entrant rotors.
 
-It is built from first principles (PDEs solved numerically), runs on a laptop in
-minutes, and is honest about what a minimal model can and cannot claim.
+> **Headline (validated).** Healthy tissue conducts an induced wavefront cleanly
+> (0 wavebreak in 10/10 fibrosis realisations). The microgravity-remodelled substrate
+> fragments wavefronts into transient phase singularities — wavebreak burden
+> **1192 PS·ms (95% CI 1031–1319), in 10/10 realisations**. The activity is *transient*
+> (it self-terminates); we do **not** claim sustained fibrillation. This matches the
+> clinical picture: increased vulnerability without observed sustained AF
+> (Khine et al., 2018).
 
-| Ground atrium (1g) | Microgravity-remodelled atrium |
+| Ground atrium (1 g) | Microgravity-remodelled atrium |
 |:---:|:---:|
-| ![ground](figures/anim_ground.gif) | ![microgravity](figures/anim_microgravity.gif) |
-| A single organised rotor | Fragmentation into multiple wandering wavelets |
+| ![ground](figures/snapshot_crn_ground.png) | ![microgravity](figures/snapshot_crn_microgravity.png) |
+| wavefront conducts cleanly | wavefront fragments into rotor cores |
 
-![rotor count over time](figures/ps_timeseries.png)
+![wavebreak over time](figures/ensemble_ps.png)
 
 ---
 
 ## The question
 
 Long-duration spaceflight is gated by cardiovascular risk. In microgravity the heart
-undergoes documented remodelling: **headward fluid shift** raises atrial filling and
-**dilates** the chamber; deconditioning and altered loading promote **structural
-remodelling / fibrosis**; and **autonomic shifts** shorten atrial refractoriness.
-Each of these is, on the ground, independently pro-arrhythmic. Astronaut atrial size
-and AF risk are an active clinical concern (Khine et al., 2018).
-
-This project turns that qualitative worry into a runnable model and a measurable
-outcome: **how many simultaneous rotors (re-entry circuits) does the tissue sustain?**
+remodels: a **headward fluid shift** raises atrial filling and dilates the chamber;
+deconditioning promotes **interstitial fibrosis**; and autonomic shifts **shorten atrial
+refractoriness**. Each is independently pro-arrhythmic on Earth. Khine et al. (2018)
+found, in astronauts, transient left-atrial enlargement (12 ± 18 mL) and
+electrophysiological change consistent with increased atrial-fibrillation (AF) risk —
+but **no sustained AF**. We test the mechanism: does this remodelling lower the re-entry
+threshold, and which component drives it?
 
 ## The model
 
-A two-variable **Aliev–Panfilov** monodomain model on a 2-D sheet:
-
-```
-du/dt = ∇·(D ∇u) − k·u·(u − a)·(u − 1) − u·v
-dv/dt = (ε₀ + μ₁·v/(u + μ₂))·(−v − k·u·(u − a − 1))
-```
-
-- `u` — fast transmembrane potential, `v` — slow recovery variable.
-- `D` is a **spatial field**, so fibrosis is modelled as patches of low cell-to-cell
-  coupling (finite-volume operator with harmonic-mean face conductances, no-flux
-  boundaries).
-- Integrated with explicit Euler under an enforced diffusion-stability bound.
-
-Re-entry is seeded deterministically with a **broken wavefront** (left half
-depolarised, top half held refractory), which curls into exactly **one** rotor — so any
-*additional* rotors that appear are attributable to the tissue substrate, not the
-stimulus.
+- **Ionics:** Courtemanche–Ramirez–Nattel human atrial action potential (21 state
+  variables, 12 currents), integrated with Rush–Larsen gating. Validated against
+  published biomarkers (resting ≈ −81 mV, APD₉₀ ≈ 290–300 ms at 1 Hz, upstroke
+  > 100 V/s).
+- **Tissue:** 2-D monodomain, operator-split (reaction then explicit finite-volume
+  diffusion). Orthotropic 3:1 conduction; longitudinal diffusion calibrated so planar
+  **conduction velocity ≈ 58 cm/s** (physiological human atrium); dx = 0.25 mm; no-flux
+  boundaries. An optional **Numba** kernel gives ≈9× speed-up, validated identical to
+  the NumPy reference to 1e-13.
+- **Fibrosis:** spatially correlated low-coupling Gaussian-random-field patches.
 
 ### Microgravity remodelling → model parameters
 
-Each mapping is a deliberately simple, individually toggleable hypothesis
-(`src/afib_microgravity/remodeling.py`):
+Each mapping is individually toggleable (`src/afib_microgravity/remodeling.py`):
 
 | Spaceflight change | Mechanism | Model representation |
 |---|---|---|
-| Atrial dilation | headward fluid shift ↑ filling | larger grid (more wavelengths fit) |
-| Fibrosis | deconditioning / loading | random low-`D` patches |
-| Electrical remodelling | autonomic shift, ↓ refractoriness | faster recovery (`ε₀` ↑) |
+| Shortened refractoriness | AF-type electrical remodelling | I_CaL ↓70%, I_to ↓50%, I_Kur ↓50%, I_K1 ↑100% → APD₉₀ 294 → 135 ms |
+| Interstitial fibrosis | deconditioning / loading | correlated low-coupling patches |
+| Atrial dilation | headward fluid shift ↑ filling | enlarged sheet (anchored to Khine +12 mL) |
 
 ## Results
 
-Rotors are counted as **phase singularities** (the topological-charge loop-integral
-method) and reported as **density** (per 10⁴ cells, to correct for the dilated atrium's
-larger area), averaged over the second half of each run. The microgravity substrate is
-random, so the headline is a **6-seed fibrosis ensemble** at full duration, not a single
-run.
+An S1–S2 cross-field protocol probes re-entrant vulnerability across a fibrosis-seed
+ensemble. Wavefront fragmentation is the **wavebreak burden**: the artifact-rejected,
+time-integrated count of phase singularities (rotor cores), via the topological-charge
+method on a delayed-V phase field. Bootstrap 95% CIs over seeds.
 
-| Condition | Rotor density (per 10⁴ cells) | Mean rotors | Across substrates |
+| Condition | Wavebreak burden (PS·ms) | Peak PS | Seeds with wavebreak |
 |---|:---:|:---:|:---:|
-| Ground (deterministic) | **0.37** | 1.8 | — |
-| Microgravity (n=6) | **0.85** | 6.9 ± 6.8 | **1.5 – 16.7** |
+| Ground | **0** (CI 0–0) | 0 | **0 / 10** |
+| Microgravity | **1192** (CI 1031–1319) | 17.9 (14.8–21.2) | **10 / 10** |
 
-**Headline: ~2.3× higher rotor density in the remodelled atrium** — but the more
-interesting result is the **variance**. Two of six fibrosis realisations tipped into
-*sustained fibrillation* (16+ rotors, peaks > 50), while the others sustained only a few
-extra wavelets. The microgravity substrate doesn't uniformly cause AF; it creates a
-**bimodal, substrate-dependent vulnerability** — which mirrors the clinical reality that
-fibrosis *pattern*, not just burden, gates AF. That variance is the finding, not noise.
+**Two controls make the result trustworthy (not an artifact):**
+- **Detector specificity** (`tests/test_ps_detector.py`): the rotor counter returns
+  exactly 1 on a single spiral and 0 on planar / static-step fields.
+- **Artifact control** (`experiments/artifact_control.py`): with a single S1 and **no
+  induced re-entry**, the fibrotic substrate shows **zero** phase singularities once the
+  wave clears — so the headline count is genuine wave fragmentation, not edge artifact.
 
-Numbers and the full per-seed breakdown are written to `figures/results.json`, fully
-reproducible from the experiment script.
+Supporting analyses: mechanism isolation (which driver dominates), vulnerable-window
+width, APD-restitution slope, fibrosis-density threshold, and a sensitivity analysis
+(robustness to the artifact threshold and conduction calibration).
 
 ## Run it
 
 ```bash
-pip install -r requirements.txt
-pytest                                      # 10 fast, deterministic tests
-python experiments/run_baseline_vs_microgravity.py   # ~3 min, writes figures/
+python -m venv .venv && source .venv/bin/activate
+pip install -e ".[dev]"          # numpy, scipy, matplotlib, pytest (+ optional numba)
+pytest                            # fast, deterministic tests incl. detector specificity
+python experiments/validate_single_cell.py        # CRN AP biomarkers
+python experiments/ensemble_with_ci.py --full     # headline ensemble (long; writes figures/)
 ```
 
 ## Repository layout
 
 ```
 src/afib_microgravity/
-  model.py        # Aliev–Panfilov sheet, variable-D finite-volume diffusion
-  protocols.py    # broken-wavefront seed, S1–S2 cross-field induction
-  remodeling.py   # microgravity → parameter mappings (the scientific core)
-  metrics.py      # phase singularities, conduction velocity, dominant frequency
-  viz.py          # snapshots, animations, time-series plots
-experiments/      # the baseline-vs-microgravity study
-tests/            # model stability, propagation, detector correctness, mappings
+  crn.py / crn_numba.py  # CRN human-atrial ionics (NumPy + Numba kernels)
+  cell_model.py          # CellModel interface (CRN and Aliev–Panfilov interchangeable)
+  diffusion.py           # anisotropic finite-volume div(D grad V)
+  model.py               # MonodomainSheet (operator splitting) + legacy AP sheet
+  fibrosis.py            # correlated low-coupling field
+  remodeling.py          # microgravity → CRN parameter mappings
+  restitution.py         # APD / CV restitution (S1–S2)
+  metrics.py             # phase singularities, wavebreak burden, bootstrap CI
+experiments/             # validation, ensemble, mechanism panel, vulnerable window, ...
+docs/preprint/           # manuscript + Computing-in-Cardiology draft
+tests/                   # ionic biomarkers, diffusion, detector specificity, ...
 ```
+
+A minimal dimensionless **Aliev–Panfilov** model is retained behind the same interface
+for fast tests and as a qualitative comparison; the scientific results above use the CRN
+ionic model.
 
 ## Scientific honesty / limitations
 
-This is a **hypothesis-generating** model, not a validated quantitative prediction.
+This is a **hypothesis-generating** model, not a clinical prediction.
 
-- The Aliev–Panfilov model is dimensionless and generic; it is *not* an ionically
-  detailed atrial model, and parameters are not fit to human atrial data.
-- The remodelling mappings are caricatures chosen for transparency, not measured
-  microgravity–tissue relationships. Magnitudes are illustrative.
-- It is a 2-D monodomain sheet: no realistic atrial geometry, fibre anisotropy,
-  pulmonary-vein triggers, or bidomain effects.
-- The microgravity result is high-variance; the ensemble is small (n=6). Treat the
-  *direction* and the *substrate-dependence* as the takeaways, not the exact factor.
-- References below should be independently verified before any formal citation.
-
-Natural next steps: fit to a published atrial action potential (e.g. Courtemanche or
-Nygren), use realistic fibrosis textures, add fibre anisotropy, and a larger ensemble
-with confidence intervals.
+- 2-D monodomain sheet: no 3-D atrial geometry, no bidomain effects, no pulmonary-vein
+  triggers.
+- The microgravity → ionic mappings are *directional* hypotheses (the documented
+  AF-remodelling direction), not measured microgravity tissue relationships; magnitudes
+  are illustrative.
+- The result is **transient re-entrant vulnerability**, not sustained AF. Sustained
+  multi-wavelet AF is not reproduced — at physiological wavelengths the required domain
+  exceeds laptop compute — and forcing it would need non-physiological parameters.
+- References below should be independently verified before formal citation.
 
 ## References
 
-- Aliev RR, Panfilov AV. *A simple two-variable model of cardiac excitation.* Chaos,
-  Solitons & Fractals. 1996;7(3):293–301.
-- Gray RA, Pertsov AM, Jalife J. *Spatial and temporal organization during cardiac
-  fibrillation.* Nature. 1998;392:75–78. (phase singularities / rotors)
+- Courtemanche M, Ramirez RJ, Nattel S. *Ionic mechanisms underlying human atrial action
+  potential properties.* Am J Physiol. 1998;275(1):H301–21.
 - Khine HW, et al. *Effects of prolonged spaceflight on atrial size, atrial
   electrophysiology, and risk of atrial fibrillation.* Circ Arrhythm Electrophysiol.
-  2018. (astronaut AF risk)
-- Garrett-Bakelman FE, et al. *The NASA Twins Study.* Science. 2019;364:eaau8650.
+  2018;11(5):e005959. (PMID 29752376.)
+- Rush S, Larsen H. *A practical algorithm for solving dynamic membrane equations.* IEEE
+  Trans Biomed Eng. 1978;25(4):389–92.
+- Gray RA, Pertsov AM, Jalife J. *Spatial and temporal organization during cardiac
+  fibrillation.* Nature. 1998;392:75–78.
 
 ## Author
 
-**Laura Piñero Roig** — Medicine (UB) · Mathematics & Physics (UAB) · La Caixa Fellow.
-Built at the intersection of cardiac electrophysiology, numerical physics, and space
-medicine.
+**Laura Piñero Roig** — Medicine (UB) · Mathematics & Physics (UAB, 1st year) · La Caixa
+Fellow. ORCID [0009-0008-3390-4029](https://orcid.org/0009-0008-3390-4029). Built at the
+intersection of cardiac electrophysiology, numerical physics, and space medicine.
 
-*MIT licensed.*
+*MIT licensed. Cite via [`CITATION.cff`](CITATION.cff).*

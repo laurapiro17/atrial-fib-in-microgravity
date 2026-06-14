@@ -50,18 +50,19 @@
     "wall_seconds": 48.64
   },
   "ensemble": {
-    "mode": "smoke",
+    "mode": "full",
     "claim": "transient re-entrant vulnerability (NOT sustained AF)",
     "base_shape": [
-      64,
-      64
+      160,
+      160
     ],
-    "n_seeds": 2,
-    "total_ms": 300.0,
+    "n_seeds": 10,
+    "total_ms": 800.0,
     "dt": 0.02,
-    "sample_every": 50,
+    "sample_every": 100,
     "s2_delay_ms": 160.0,
-    "blank_after_s2_ms": 100.0,
+    "artifact_ps_threshold": 40,
+    "min_analysis_ms": 40.0,
     "d_long": 0.15,
     "apd_note": "microgravity = AF-remodelled CRN, APD90 ~135 ms; ground = baseline CRN, APD90 ~294 ms",
     "conditions": {
@@ -69,96 +70,336 @@
         "per_seed": [
           {
             "peak_ps": 0,
-            "mean_ps_window": 0.0,
-            "time_to_extinction_ms": 100.0,
+            "mean_ps": 0.0,
+            "break_burden_ps_ms": 0.0,
+            "active_frac": 0.0,
             "ps_density_peak_x1e4": 0.0,
             "sustained_af": false,
-            "window_start_ms": 260.0,
-            "window_n": 40,
+            "n_valid": 380,
             "seed": 0,
             "shape": [
-              64,
-              64
+              160,
+              160
             ],
-            "wall_seconds": 20.36
+            "wall_seconds": 152.49
           },
           {
             "peak_ps": 0,
-            "mean_ps_window": 0.0,
-            "time_to_extinction_ms": 100.0,
+            "mean_ps": 0.0,
+            "break_burden_ps_ms": 0.0,
+            "active_frac": 0.0,
             "ps_density_peak_x1e4": 0.0,
             "sustained_af": false,
-            "window_start_ms": 260.0,
-            "window_n": 40,
+            "n_valid": 380,
             "seed": 1,
             "shape": [
-              64,
-              64
+              160,
+              160
             ],
-            "wall_seconds": 14.06
+            "wall_seconds": 160.29
+          },
+          {
+            "peak_ps": 0,
+            "mean_ps": 0.0,
+            "break_burden_ps_ms": 0.0,
+            "active_frac": 0.0,
+            "ps_density_peak_x1e4": 0.0,
+            "sustained_af": false,
+            "n_valid": 380,
+            "seed": 2,
+            "shape": [
+              160,
+              160
+            ],
+            "wall_seconds": 178.35
+          },
+          {
+            "peak_ps": 0,
+            "mean_ps": 0.0,
+            "break_burden_ps_ms": 0.0,
+            "active_frac": 0.0,
+            "ps_density_peak_x1e4": 0.0,
+            "sustained_af": false,
+            "n_valid": 380,
+            "seed": 3,
+            "shape": [
+              160,
+              160
+            ],
+            "wall_seconds": 220.8
+          },
+          {
+            "peak_ps": 0,
+            "mean_ps": 0.0,
+            "break_burden_ps_ms": 0.0,
+            "active_frac": 0.0,
+            "ps_density_peak_x1e4": 0.0,
+            "sustained_af": false,
+            "n_valid": 380,
+            "seed": 4,
+            "shape": [
+              160,
+              160
+            ],
+            "wall_seconds": 221.19
+          },
+          {
+            "peak_ps": 0,
+            "mean_ps": 0.0,
+            "break_burden_ps_ms": 0.0,
+            "active_frac": 0.0,
+            "ps_density_peak_x1e4": 0.0,
+            "sustained_af": false,
+            "n_valid": 380,
+            "seed": 5,
+            "shape": [
+              160,
+              160
+            ],
+            "wall_seconds": 190.86
+          },
+          {
+            "peak_ps": 0,
+            "mean_ps": 0.0,
+            "break_burden_ps_ms": 0.0,
+            "active_frac": 0.0,
+            "ps_density_peak_x1e4": 0.0,
+            "sustained_af": false,
+            "n_valid": 380,
+            "seed": 6,
+            "shape": [
+              160,
+              160
+            ],
+            "wall_seconds": 142.24
+          },
+          {
+            "peak_ps": 0,
+            "mean_ps": 0.0,
+            "break_burden_ps_ms": 0.0,
+            "active_frac": 0.0,
+            "ps_density_peak_x1e4": 0.0,
+            "sustained_af": false,
+            "n_valid": 380,
+            "seed": 7,
+            "shape": [
+              160,
+              160
+            ],
+            "wall_seconds": 127.48
+          },
+          {
+            "peak_ps": 0,
+            "mean_ps": 0.0,
+            "break_burden_ps_ms": 0.0,
+            "active_frac": 0.0,
+            "ps_density_peak_x1e4": 0.0,
+            "sustained_af": false,
+            "n_valid": 380,
+            "seed": 8,
+            "shape": [
+              160,
+              160
+            ],
+            "wall_seconds": 142.71
+          },
+          {
+            "peak_ps": 0,
+            "mean_ps": 0.0,
+            "break_burden_ps_ms": 0.0,
+            "active_frac": 0.0,
+            "ps_density_peak_x1e4": 0.0,
+            "sustained_af": false,
+            "n_valid": 380,
+            "seed": 9,
+            "shape": [
+              160,
+              160
+            ],
+            "wall_seconds": 143.19
           }
         ],
-        "mean_ps_window_mean": 0.0,
-        "mean_ps_window_ci95": [
+        "break_burden_ps_ms_mean": 0.0,
+        "break_burden_ps_ms_ci95": [
           0.0,
           0.0
         ],
-        "time_to_extinction_ms_mean": 100.0,
-        "time_to_extinction_ms_ci95": [
-          100.0,
-          100.0
+        "peak_ps_mean": 0.0,
+        "peak_ps_ci95": [
+          0.0,
+          0.0
         ],
-        "n_sustained": 0
+        "n_seeds_with_wavebreak": 0
       },
       "microgravity": {
         "per_seed": [
           {
-            "peak_ps": 0,
-            "mean_ps_window": 0.0,
-            "time_to_extinction_ms": 100.0,
-            "ps_density_peak_x1e4": 0.0,
+            "peak_ps": 19,
+            "mean_ps": 1.4394736842105262,
+            "break_burden_ps_ms": 1094.0,
+            "active_frac": 0.2026315789473684,
+            "ps_density_peak_x1e4": 4.391642011834319,
             "sustained_af": false,
-            "window_start_ms": 260.0,
-            "window_n": 40,
+            "n_valid": 380,
             "seed": 0,
             "shape": [
-              83,
-              83
+              208,
+              208
             ],
-            "wall_seconds": 19.94
+            "wall_seconds": 281.61
           },
           {
-            "peak_ps": 0,
-            "mean_ps_window": 0.0,
-            "time_to_extinction_ms": 100.0,
-            "ps_density_peak_x1e4": 0.0,
+            "peak_ps": 23,
+            "mean_ps": 1.6078947368421053,
+            "break_burden_ps_ms": 1222.0,
+            "active_frac": 0.2,
+            "ps_density_peak_x1e4": 5.316198224852071,
             "sustained_af": false,
-            "window_start_ms": 260.0,
-            "window_n": 40,
+            "n_valid": 380,
             "seed": 1,
             "shape": [
-              83,
-              83
+              208,
+              208
             ],
-            "wall_seconds": 18.58
+            "wall_seconds": 270.36
+          },
+          {
+            "peak_ps": 11,
+            "mean_ps": 1.2947368421052632,
+            "break_burden_ps_ms": 984.0,
+            "active_frac": 0.3078947368421053,
+            "ps_density_peak_x1e4": 2.5425295857988166,
+            "sustained_af": false,
+            "n_valid": 380,
+            "seed": 2,
+            "shape": [
+              208,
+              208
+            ],
+            "wall_seconds": 268.26
+          },
+          {
+            "peak_ps": 12,
+            "mean_ps": 1.8157894736842106,
+            "break_burden_ps_ms": 1380.0,
+            "active_frac": 0.3157894736842105,
+            "ps_density_peak_x1e4": 2.7736686390532546,
+            "sustained_af": false,
+            "n_valid": 380,
+            "seed": 3,
+            "shape": [
+              208,
+              208
+            ],
+            "wall_seconds": 346.69
+          },
+          {
+            "peak_ps": 25,
+            "mean_ps": 1.8026315789473684,
+            "break_burden_ps_ms": 1370.0,
+            "active_frac": 0.30526315789473685,
+            "ps_density_peak_x1e4": 5.778476331360947,
+            "sustained_af": false,
+            "n_valid": 380,
+            "seed": 4,
+            "shape": [
+              208,
+              208
+            ],
+            "wall_seconds": 248.79
+          },
+          {
+            "peak_ps": 19,
+            "mean_ps": 1.7210526315789474,
+            "break_burden_ps_ms": 1308.0,
+            "active_frac": 0.24736842105263157,
+            "ps_density_peak_x1e4": 4.391642011834319,
+            "sustained_af": false,
+            "n_valid": 380,
+            "seed": 5,
+            "shape": [
+              208,
+              208
+            ],
+            "wall_seconds": 251.09
+          },
+          {
+            "peak_ps": 26,
+            "mean_ps": 1.6210526315789473,
+            "break_burden_ps_ms": 1232.0,
+            "active_frac": 0.23421052631578948,
+            "ps_density_peak_x1e4": 6.009615384615385,
+            "sustained_af": false,
+            "n_valid": 380,
+            "seed": 6,
+            "shape": [
+              208,
+              208
+            ],
+            "wall_seconds": 230.39
+          },
+          {
+            "peak_ps": 18,
+            "mean_ps": 1.6973684210526316,
+            "break_burden_ps_ms": 1290.0,
+            "active_frac": 0.19736842105263158,
+            "ps_density_peak_x1e4": 4.160502958579881,
+            "sustained_af": false,
+            "n_valid": 380,
+            "seed": 7,
+            "shape": [
+              208,
+              208
+            ],
+            "wall_seconds": 250.14
+          },
+          {
+            "peak_ps": 16,
+            "mean_ps": 1.881578947368421,
+            "break_burden_ps_ms": 1430.0,
+            "active_frac": 0.25526315789473686,
+            "ps_density_peak_x1e4": 3.698224852071006,
+            "sustained_af": false,
+            "n_valid": 380,
+            "seed": 8,
+            "shape": [
+              208,
+              208
+            ],
+            "wall_seconds": 270.31
+          },
+          {
+            "peak_ps": 10,
+            "mean_ps": 0.8052631578947368,
+            "break_burden_ps_ms": 612.0,
+            "active_frac": 0.16578947368421051,
+            "ps_density_peak_x1e4": 2.3113905325443787,
+            "sustained_af": false,
+            "n_valid": 380,
+            "seed": 9,
+            "shape": [
+              208,
+              208
+            ],
+            "wall_seconds": 193.92
           }
         ],
-        "mean_ps_window_mean": 0.0,
-        "mean_ps_window_ci95": [
-          0.0,
-          0.0
+        "break_burden_ps_ms_mean": 1192.2,
+        "break_burden_ps_ms_ci95": [
+          1030.995,
+          1318.8
         ],
-        "time_to_extinction_ms_mean": 100.0,
-        "time_to_extinction_ms_ci95": [
-          100.0,
-          100.0
+        "peak_ps_mean": 17.9,
+        "peak_ps_ci95": [
+          14.8,
+          21.2
         ],
-        "n_sustained": 0
+        "n_seeds_with_wavebreak": 10
       }
     },
     "fold_increase": null,
-    "fold_increase_note": "ground mean_ps_window ~0 (0); fold undefined, microgravity mean_ps_window=0",
-    "total_wall_seconds": 73.3
+    "fold_increase_note": "ground wavebreak burden ~0 (0); fold undefined (healthy tissue conducts cleanly), microgravity burden=1.19e+03 PS\u00b7ms",
+    "total_wall_seconds": 4292.0
   },
   "dose_response": {
     "mode": "smoke",
@@ -203,5 +444,39 @@
       }
     },
     "wall_seconds": 7.5
+  },
+  "artifact_control": {
+    "mode": "full",
+    "grid": 160,
+    "n_seeds": 5,
+    "per_seed": [
+      {
+        "peak_ps_valid": 11,
+        "tail_mean_ps": 0.0,
+        "tail_max_ps": 0
+      },
+      {
+        "peak_ps_valid": 14,
+        "tail_mean_ps": 0.0,
+        "tail_max_ps": 0
+      },
+      {
+        "peak_ps_valid": 9,
+        "tail_mean_ps": 0.0,
+        "tail_max_ps": 0
+      },
+      {
+        "peak_ps_valid": 10,
+        "tail_mean_ps": 0.0,
+        "tail_max_ps": 0
+      },
+      {
+        "peak_ps_valid": 14,
+        "tail_mean_ps": 0.0,
+        "tail_max_ps": 0
+      }
+    ],
+    "tail_mean_ps_mean": 0.0,
+    "verdict": "CLEAN (no spurious PS once wave clears -> headline effect is real re-entry, not a detector artifact)"
   }
 }

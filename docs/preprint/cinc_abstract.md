@@ -16,8 +16,8 @@ increases re-entrant vulnerability. A 2-D human-atrial monodomain model
 (Courtemanche-Ramirez-Nattel ionics, orthotropic conduction calibrated to ≈58 cm/s)
 was driven by an S1-S2 protocol across an ensemble of fibrosis realisations; we
 quantified wavefront fragmentation as an artifact-rejected phase-singularity
-(wavebreak) burden. Healthy tissue conducted cleanly; the remodelled substrate
-fragmented wavefronts (burden [TO FILL] vs [TO FILL] PS·ms). A mechanism-isolation
+(wavebreak) burden. Healthy tissue conducted cleanly (0/10 seeds); the remodelled substrate
+fragmented wavefronts (burden 0 vs 1192 PS·ms, 95% CI 1031–1319; 10/10 seeds). A mechanism-isolation
 analysis attributed the effect predominantly to [TO FILL], and the vulnerable
 window widened from [TO FILL] to [TO FILL] ms. The model reproduces increased
 vulnerability without sustained AF, consistent with the clinical picture, and is a
@@ -57,8 +57,9 @@ restitution-slope and fibrosis-threshold analyses dissect the effect.
 ## 3. Results
 
 - Single-cell and CV validation: [Figure 1].
-- Wavebreak burden: ground [TO FILL] PS·ms (95 % CI [TO FILL]); microgravity
-  [TO FILL] PS·ms (95 % CI [TO FILL]); seeds with wavebreak [TO FILL]/N.
+- Wavebreak burden: ground 0 PS·ms (95 % CI 0–0); microgravity
+  1192 PS·ms (95 % CI 1031–1319); seeds with wavebreak 10/10 vs 0/10.
+  Detector specificity and an artifact control confirm the effect is real.
 - Mechanism isolation: dominant driver = [TO FILL] [Figure 2].
 - Vulnerable-window width: ground [TO FILL] ms vs microgravity [TO FILL] ms.
 - APD restitution max slope: ground [TO FILL] vs microgravity [TO FILL].
