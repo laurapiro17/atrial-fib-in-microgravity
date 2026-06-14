@@ -13,7 +13,7 @@ minutes, and is honest about what a minimal model can and cannot claim.
 
 | Ground atrium (1g) | Microgravity-remodelled atrium |
 |:---:|:---:|
-| ![ground](figures/snapshot_ground.png) | ![microgravity](figures/snapshot_microgravity.png) |
+| ![ground](figures/anim_ground.gif) | ![microgravity](figures/anim_microgravity.gif) |
 | A single organised rotor | Fragmentation into multiple wandering wavelets |
 
 ![rotor count over time](figures/ps_timeseries.png)
