@@ -1,0 +1,178 @@
+{
+  "single_cell": {
+    "mode": "smoke",
+    "dt": 0.05,
+    "biomarkers": {
+      "V_rest": -81.1895848538358,
+      "V_peak": 31.517966586219412,
+      "dVdt_max": 216.795707432861,
+      "APD90": 300.6635671476338
+    },
+    "ranges": {
+      "V_rest": [
+        -86.0,
+        -75.0
+      ],
+      "V_peak": [
+        10.0,
+        35.0
+      ],
+      "APD90": [
+        250.0,
+        360.0
+      ],
+      "dVdt_max": [
+        100.0,
+        null
+      ]
+    },
+    "passed": true,
+    "wall_seconds": 5.72
+  },
+  "restitution": {
+    "mode": "smoke",
+    "dt": 0.1,
+    "diastolic_intervals": [
+      80,
+      200,
+      400
+    ],
+    "apd90_ground": [
+      276.39760553335094,
+      279.8399234164445,
+      284.6576439371678
+    ],
+    "apd90_microgravity": [
+      224.65479346578613,
+      232.3310359036932,
+      240.5018588411532
+    ],
+    "wall_seconds": 48.64
+  },
+  "ensemble": {
+    "mode": "smoke",
+    "base_shape": [
+      48,
+      48
+    ],
+    "n_seeds": 2,
+    "n_steps": 400,
+    "dt": 0.02,
+    "conditions": {
+      "ground": {
+        "per_seed": [
+          {
+            "seed": 0,
+            "shape": [
+              48,
+              48
+            ],
+            "ps_mean_second_half": 0.0,
+            "ps_max": 2,
+            "ps_density_x1e4": 0.0,
+            "sustained_af": false,
+            "wall_seconds": 0.82
+          },
+          {
+            "seed": 1,
+            "shape": [
+              48,
+              48
+            ],
+            "ps_mean_second_half": 0.0,
+            "ps_max": 2,
+            "ps_density_x1e4": 0.0,
+            "sustained_af": false,
+            "wall_seconds": 0.93
+          }
+        ],
+        "ps_density_mean_x1e4": 0.0,
+        "ps_density_ci95_x1e4": [
+          0.0,
+          0.0
+        ],
+        "n_sustained": 0
+      },
+      "microgravity": {
+        "per_seed": [
+          {
+            "seed": 0,
+            "shape": [
+              62,
+              62
+            ],
+            "ps_mean_second_half": 1.8,
+            "ps_max": 2,
+            "ps_density_x1e4": 4.682622268470344,
+            "sustained_af": false,
+            "wall_seconds": 1.38
+          },
+          {
+            "seed": 1,
+            "shape": [
+              62,
+              62
+            ],
+            "ps_mean_second_half": 0.0,
+            "ps_max": 2,
+            "ps_density_x1e4": 0.0,
+            "sustained_af": false,
+            "wall_seconds": 1.4
+          }
+        ],
+        "ps_density_mean_x1e4": 2.341311134235172,
+        "ps_density_ci95_x1e4": [
+          0.0,
+          4.682622268470344
+        ],
+        "n_sustained": 0
+      }
+    },
+    "density_fold_increase": null,
+    "total_wall_seconds": 4.5
+  },
+  "dose_response": {
+    "mode": "smoke",
+    "dt": 0.02,
+    "base_grid": 48,
+    "n_steps": 400,
+    "base_operating_point": {
+      "dilation": 1.3,
+      "fibrosis_density": 0.3,
+      "remodelling_severity": 1.0
+    },
+    "sweeps": {
+      "dilation": {
+        "values": [
+          1.0,
+          1.4
+        ],
+        "ps_density_x1e4": [
+          7.8125,
+          4.009801737580753
+        ]
+      },
+      "fibrosis_density": {
+        "values": [
+          0.0,
+          0.4
+        ],
+        "ps_density_x1e4": [
+          0.0,
+          4.682622268470344
+        ]
+      },
+      "remodelling_severity": {
+        "values": [
+          0.0,
+          1.0
+        ],
+        "ps_density_x1e4": [
+          5.202913631633716,
+          4.682622268470344
+        ]
+      }
+    },
+    "wall_seconds": 7.5
+  }
+}
