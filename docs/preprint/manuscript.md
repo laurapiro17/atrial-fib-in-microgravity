@@ -31,11 +31,11 @@ Here we test, in a physiologically grounded 2-D human-atrial model, whether micr
 
 ### 2.1 Ionic model
 
-Membrane kinetics use the Courtemanche–Ramirez–Nattel (CRN) human atrial action-potential model — 21 state variables and 12 sarcolemmal currents plus sarcoplasmic-reticulum calcium handling. Gating variables are integrated with the Rush–Larsen exponential scheme; membrane voltage and ionic concentrations with forward Euler. The single-cell model was validated against published CRN biomarkers: resting potential ≈ −81 mV, peak ≈ +30 mV, APD₉₀ ≈ 294 ms at 1 Hz, maximum upstroke velocity > 200 V/s, with physiological rate-dependent APD shortening.
+Membrane kinetics use the Courtemanche–Ramirez–Nattel (CRN) human atrial action-potential model — 21 state variables and 12 sarcolemmal currents plus sarcoplasmic-reticulum calcium handling. Gating variables are integrated with the Rush–Larsen exponential scheme; membrane voltage and ionic concentrations with forward Euler. The single-cell model was validated against published CRN biomarkers: resting potential ≈ −81 mV, peak ≈ +30 mV, APD₉₀ ≈ 290–300 ms at 1 Hz, maximum upstroke velocity > 100 V/s (≈220 V/s in the validation run), with physiological rate-dependent APD shortening.
 
 ### 2.2 Tissue model
 
-Tissue is a 2-D monodomain sheet, `∂V/∂t = ∇·(D∇V) − I_ion/C_m`, integrated by operator splitting (Rush–Larsen reaction step, then an explicit anisotropic finite-volume diffusion step under the diffusion-stability bound). The conductivity tensor is built from a fibre-angle field giving longitudinal:transverse anisotropy ≈ 3:1; the longitudinal diffusion coefficient was calibrated so that planar conduction velocity ≈ 58 cm/s (physiological human atrium). Space step dx = 0.25 mm; no-flux boundaries. The implementation is pure NumPy with an optional Numba-accelerated kernel (≈9× speed-up, validated identical to the reference to 1×10⁻¹³).
+Tissue is a 2-D monodomain sheet, `∂V/∂t = ∇·(D∇V) − I_ion/C_m`, integrated by operator splitting (Rush–Larsen reaction step, then an explicit finite-volume diffusion step under the diffusion-stability bound). Conduction is **orthotropic** with longitudinal:transverse ratio ≈ 3:1 (fibres aligned to the x-axis; a spatially rotating fibre field is supported by the implementation but not used here). The longitudinal diffusion coefficient was calibrated so that planar conduction velocity ≈ 58 cm/s (physiological human atrium). Space step dx = 0.25 mm; no-flux boundaries. The implementation is pure NumPy with an optional Numba-accelerated kernel (≈9× speed-up, validated identical to the reference to 1×10⁻¹³).
 
 ### 2.3 Microgravity remodelling
 
