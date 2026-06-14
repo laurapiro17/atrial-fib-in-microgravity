@@ -79,3 +79,28 @@ def dominant_frequency(signal, dt):
     spectrum = np.abs(np.fft.rfft(sig))
     freqs = np.fft.rfftfreq(sig.size, d=dt)
     return float(freqs[1:][np.argmax(spectrum[1:])])
+
+
+def ps_density(count, area_cells):
+    """Phase-singularity density per 10^4 cells (area-normalised rotor count)."""
+    return count / area_cells * 1e4
+
+
+def is_sustained_af(series, window_frac=0.5, threshold=2):
+    """True if the mean phase-singularity count over the final window_frac of the
+    time series is at least threshold (i.e. fibrillatory activity persisted)."""
+    series = np.asarray(series, dtype=float)
+    if series.size == 0:
+        return False
+    k = max(1, int(round(window_frac * series.size)))
+    return bool(series[-k:].mean() >= threshold)
+
+
+def bootstrap_ci(values, n_boot=2000, alpha=0.05, seed=0):
+    """Mean and (1-alpha) percentile bootstrap CI of values."""
+    rng = np.random.default_rng(seed)
+    vals = np.asarray(values, dtype=float)
+    boots = np.array([rng.choice(vals, size=vals.size, replace=True).mean()
+                      for _ in range(n_boot)])
+    lo, hi = np.quantile(boots, [alpha / 2, 1 - alpha / 2])
+    return float(vals.mean()), float(lo), float(hi)
