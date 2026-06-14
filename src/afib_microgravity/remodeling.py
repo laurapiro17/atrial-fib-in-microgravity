@@ -88,3 +88,89 @@ def make_condition(name: str, base_shape=(220, 220)):
         d_field = fibrosis_field(shape, density=0.55, seed=7)
         return shape, params, d_field
     raise ValueError(f"unknown condition {name!r}")
+
+
+# ---------------------------------------------------------------------------
+# CRN-based remodelling functions
+# ---------------------------------------------------------------------------
+
+import dataclasses
+
+from .crn import CRNCell, CRNParams
+from .diffusion import AnisotropicDiffusion
+from .fibrosis import correlated_fibrosis
+
+
+def baseline_crn_params() -> CRNParams:
+    """Default CRN 1998 parameters representing healthy ground-level atrium."""
+    return CRNParams()
+
+
+def microgravity_crn_params(severity: float = 1.0) -> CRNParams:
+    """AF-type electrical remodelling as observed post-spaceflight.
+
+    Maps microgravity exposure onto CRN ionic conductances following
+    the literature-anchored AF remodelling pattern (Khine 2018 and
+    supporting atrial electrophysiology literature):
+
+    * **ICaL** (g_CaL) reduced  → shortened plateau, shorter APD.
+    * **Ito**  (g_to)  reduced  → less early repolarisation reserve.
+    * **IKur** (g_Kur_scale) reduced → less sustained outward K current.
+    * **INa**  (g_Na)  unchanged.
+    * **IKr**  (g_Kr)  unchanged.
+
+    All three reductions shorten atrial refractoriness and favour re-entry
+    — the electrophysiological signature associated with increased AF
+    vulnerability post-spaceflight.
+
+    Parameters
+    ----------
+    severity:
+        0 → recovers baseline exactly; 1 → halves ICaL, Ito, and IKur.
+    """
+    base = CRNParams()
+    scale = 1.0 - 0.5 * severity
+    return dataclasses.replace(
+        base,
+        g_CaL=base.g_CaL * scale,
+        g_to=base.g_to * scale,
+        g_Kur_scale=base.g_Kur_scale * scale,
+    )
+
+
+def make_condition_crn(name: str, base_shape=(200, 200), seed: int = 0):
+    """Return ``(cell, diffusion)`` for a named CRN-based condition.
+
+    Conditions
+    ----------
+    ``"ground"``       : baseline CRN kinetics, homogeneous diffusion.
+    ``"microgravity"`` : dilated tissue, AF-remodelled kinetics, fibrotic coupling.
+    """
+    if name == "ground":
+        shape = base_shape
+        cell = CRNCell(shape=shape, params=baseline_crn_params())
+        diff = AnisotropicDiffusion(
+            shape=shape,
+            d_long=0.06,
+            d_trans=0.02,
+            theta=np.zeros(shape),
+            dx=0.25,
+            coupling=None,
+        )
+        return cell, diff
+
+    if name == "microgravity":
+        shape = (int(base_shape[0] * 1.3), int(base_shape[1] * 1.3))
+        cell = CRNCell(shape=shape, params=microgravity_crn_params(severity=1.0))
+        coupling = correlated_fibrosis(shape, density=0.3, corr_len=4.0, seed=seed)
+        diff = AnisotropicDiffusion(
+            shape=shape,
+            d_long=0.06,
+            d_trans=0.02,
+            theta=np.zeros(shape),
+            dx=0.25,
+            coupling=coupling,
+        )
+        return cell, diff
+
+    raise ValueError(f"unknown condition {name!r}")
