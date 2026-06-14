@@ -47,7 +47,7 @@ Three documented spaceflight changes are mapped to the substrate, each individua
 | Interstitial fibrosis | deconditioning / altered loading | correlated low-coupling Gaussian-random-field patches |
 | Atrial dilation | headward fluid shift ↑ filling | enlarged sheet |
 
-The ionic-remodelling pattern is the canonical AF-remodelling direction; magnitudes are scaled hypotheses chosen to reproduce the *direction* (shortened refractoriness) reported post-spaceflight, not direct microgravity tissue measurements.
+The ionic-remodelling pattern is the canonical AF-remodelling direction; magnitudes are scaled hypotheses chosen to reproduce the *direction* (shortened refractoriness) reported post-spaceflight, not direct microgravity tissue measurements. The dilation magnitude is anchored to Khine et al. (2018), who measured a transient left-atrial volume increase of 12 ± 18 mL (≈20%) after six months in space; the modelled enlargement is an illustrative bound, and — given that the standard deviation exceeds the mean — dilation is expected to be a minor contributor, which the mechanism-isolation analysis (Section 3.2) tests directly.
 
 ### 2.4 Re-entry induction and read-out
 
