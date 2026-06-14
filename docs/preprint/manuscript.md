@@ -88,6 +88,51 @@ This is a hypothesis-generating model, not a quantitative clinical prediction. (
 
 Fit to additional human-atrial data; 3-D and bidomain extensions; larger GPU-scale ensembles to test for sustained multi-wavelet dynamics; coupling to measured microgravity / bedrest / dry-immersion cardiac datasets.
 
+## Appendix A — Parameter table
+
+**Ionic model (CRN baseline maximal conductances / fluxes).** Default Courtemanche–Ramirez–Nattel (1998) values:
+
+| Current | Symbol | Value | Unit |
+|---|---|---|---|
+| Fast Na⁺ | g_Na | 7.8 | nS/pF |
+| Inward rectifier K⁺ | g_K1 | 0.09 | nS/pF |
+| Transient outward K⁺ | g_to | 0.1652 | nS/pF |
+| Ultrarapid delayed K⁺ | g_Kur | 0.005 + 0.05/(1+e^(−(V−15)/13)) | nS/pF |
+| Rapid delayed K⁺ | g_Kr | 0.0294 | nS/pF |
+| Slow delayed K⁺ | g_Ks | 0.129 | nS/pF |
+| L-type Ca²⁺ | g_CaL | 0.12375 | nS/pF |
+| Na⁺–K⁺ pump | I_NaK,max | 0.599 | pA/pF |
+| Na⁺–Ca²⁺ exchanger | I_NaCa,max | 1600 | pA/pF |
+| Membrane capacitance | C_m | 100 | pF |
+
+**Microgravity (AF-type) remodelling — scalings applied at severity = 1.0:**
+
+| Current | Change | Rationale |
+|---|---|---|
+| I_CaL | −70 % | canonical AF electrical remodelling (APD/refractoriness ↓) |
+| I_to | −50 % | canonical AF electrical remodelling |
+| I_Kur | −50 % | canonical AF electrical remodelling |
+| I_K1 | +100 % | canonical AF electrical remodelling (resting stabilisation, APD ↓) |
+| I_Na, I_Kr | unchanged | conduction velocity preserved |
+
+Net effect: APD₉₀ ≈ 294 ms (baseline) → ≈ 135 ms (remodelled). `severity = 0` recovers baseline; scalings are linear in severity.
+
+**Tissue / numerics:**
+
+| Parameter | Value |
+|---|---|
+| Space step dx | 0.25 mm |
+| Longitudinal diffusion D_∥ | 0.15 mm²/ms (planar CV ≈ 58 cm/s) |
+| Transverse diffusion D_⊥ | 0.05 mm²/ms (anisotropy ≈ 3:1) |
+| Time step dt | 0.02 ms (operator-split; Rush–Larsen gates) |
+| Dilation factor (microgravity) | 1.3× linear |
+| Fibrosis area fraction | 0.30 |
+| Fibrosis correlation length | 4 cells (1.0 mm) |
+| Scar coupling | 0.05 × healthy |
+| Boundary conditions | no-flux (Neumann) |
+
+*All values are transcribed from the cited CRN source or are the calibrated/illustrative choices documented above; remodelling magnitudes are directional hypotheses, not microgravity tissue measurements.*
+
 ## References
 
 1. Courtemanche M, Ramirez RJ, Nattel S. Ionic mechanisms underlying human atrial action potential properties. *Am J Physiol.* 1998;275(1):H301–21.

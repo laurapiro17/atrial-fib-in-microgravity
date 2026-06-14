@@ -1,0 +1,54 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "Atrial fibrillation in microgravity: an in-silico human-atrial model"
+abstract: >-
+  A reproducible 2-D human-atrial monodomain model (Courtemanche-Ramirez-Nattel
+  ionic kinetics, fibre-anisotropic conduction, correlated fibrosis) testing
+  whether microgravity-induced atrial remodelling increases re-entrant
+  vulnerability. Hypothesis-generating tool for spaceflight cardiac-arrhythmia risk.
+type: software
+authors:
+  - given-names: Laura
+    family-names: Piñero Roig
+    orcid: "https://orcid.org/0009-0008-3390-4029"
+    affiliation: "Faculty of Medicine, University of Barcelona"
+repository-code: "https://github.com/laurapiro17/atrial-fib-in-microgravity"
+license: MIT
+keywords:
+  - cardiac-electrophysiology
+  - atrial-fibrillation
+  - space-medicine
+  - computational-biology
+  - reaction-diffusion
+  - Courtemanche-Ramirez-Nattel
+references:
+  - type: article
+    authors:
+      - family-names: Khine
+        given-names: Htet W
+      - family-names: Steding-Ehrenborg
+        given-names: Katarina
+      - family-names: Hastings
+        given-names: Jeffrey L
+    title: >-
+      Effects of Prolonged Spaceflight on Atrial Size, Atrial Electrophysiology,
+      and Risk of Atrial Fibrillation
+    journal: "Circulation: Arrhythmia and Electrophysiology"
+    year: 2018
+    volume: 11
+    issue: 5
+    notes: "PMID 29752376"
+  - type: article
+    authors:
+      - family-names: Courtemanche
+        given-names: Marc
+      - family-names: Ramirez
+        given-names: Rafael J
+      - family-names: Nattel
+        given-names: Stanley
+    title: >-
+      Ionic mechanisms underlying human atrial action potential properties
+    journal: "American Journal of Physiology"
+    year: 1998
+    volume: 275
+    issue: 1
