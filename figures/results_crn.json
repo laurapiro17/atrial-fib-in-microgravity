@@ -608,5 +608,51 @@
       }
     },
     "wall_seconds": 2457.9
+  },
+  "gravity_corroboration": {
+    "mode": "full",
+    "base_grid": 100,
+    "n_steps": 12000,
+    "g": [
+      0.0,
+      0.16,
+      0.38,
+      0.5,
+      0.8,
+      1.0
+    ],
+    "ps_density_x1e4": [
+      9.743589743589743,
+      14.762666666666666,
+      11.921861534041943,
+      4.4372627475120545,
+      1.2311617420196985,
+      0.0
+    ]
+  },
+  "gravity_sensitivity": {
+    "l0_cm": [
+      6.0,
+      8.0,
+      10.0,
+      12.0
+    ],
+    "gstar_vs_l0": [
+      null,
+      0.21691518058684403,
+      0.4067065679445044,
+      0.5782182580983369
+    ],
+    "drive_exponent": [
+      0.5,
+      1.0,
+      2.0
+    ],
+    "gstar_vs_exponent": [
+      0.33680617266656193,
+      0.21691518058684403,
+      0.12785567196089212
+    ],
+    "note": "g* interpolated from APD90(severity) measured in gravity_law sweep; no re-simulation."
   }
 }

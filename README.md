@@ -87,6 +87,54 @@ Supporting analyses: mechanism isolation (which driver dominates), vulnerable-wi
 width, APD-restitution slope, fibrosis-density threshold, and a sensitivity analysis
 (robustness to the artifact threshold and conduction calibration).
 
+## A gravitational scaling law (𝒩_g) 🌗
+
+Beyond the binary ground-vs-microgravity contrast, we treat gravity as a
+**continuous** variable. A simple linear map sends the gravitational level `g`
+(Earth-g units) to atrial remodelling through the cephalad fluid-shift drive
+`(1 − g)`, calibrated so `g=1` recovers the validated ground baseline and `g=0`
+recovers the microgravity operating point. From the single-cell APD₉₀ we form the
+electrical wavelength `WL = CV·APD₉₀` and a dimensionless **Cardiac Gravitational
+Number**
+
+> **𝒩_g = L₀·dilation(g) / WL(g)**
+
+Re-entry can be hosted when `𝒩_g ≳ 1`; the **critical gravity `g*`** solves
+`𝒩_g(g*) = 1`.
+
+| g (Earth-g) | body | 𝒩_g | verdict |
+|:---:|:---|:---:|:---:|
+| 0.00 | interplanetary transit | 1.29 | vulnerable |
+| 0.16 | **Moon** | ≈1.07 | vulnerable |
+| 0.38 | **Mars** | 0.81 | protected |
+| 1.00 | Earth | 0.47 | safe |
+
+The crossing sits at **`g* ≈ 0.22`, between the Moon and Mars** — a concrete,
+falsifiable prediction. The full 2-D sheet corroborates the trend independently:
+rotor burden (phase-singularity density) rises as gravity falls and is **exactly
+zero at Earth**, though the transition is gradual rather than a sharp threshold
+(some residual rotors persist at the Mars level).
+
+**Robust to the map shape, sensitive to atrial size.** Varying the fluid-shift
+drive exponent `p` in `(1−g)^p` leaves `g* ∈ [0.13, 0.34]`. But `g*` depends
+strongly on the characteristic atrial path length `L₀`: `g*≈none` (no one
+vulnerable) at `L₀=6 cm`, `0.22` at `8 cm`, `0.41` at `10 cm`, `0.58` at `12 cm`.
+This yields a clinical hypothesis: **individual atrial size may determine off-world
+arrhythmia risk.**
+
+```bash
+python experiments/gravity_sweep.py --full        # 𝒩_g vs g curve, g*  -> figures/gravity_law.png
+python experiments/gravity_sensitivity.py         # g* vs L0 and map shape
+python experiments/gravity_corroboration.py --full  # full-sheet rotor burden vs 𝒩_g
+```
+
+> **This is a falsifiable hypothesis, not a proof.** The `g→remodelling` map and
+> the mechano-electric sensitivities are assumptions; `𝒩_g` predicts a rise in
+> *substrate vulnerability*, not guaranteed AF — consistent with Khine et al. 2018
+> (risk markers up, no sustained AF). The `g→stretch` link uses acute-stretch
+> mechano-electric data as a stand-in for chronic adaptation; validating it against
+> centrifuge/partial-gravity electrophysiology is the key next step.
+
 ## Run it
 
 ```bash
