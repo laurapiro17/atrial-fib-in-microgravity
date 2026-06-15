@@ -112,7 +112,7 @@ Re-entry can be hosted when `𝒩_g ≳ 1`; the **critical gravity `g*`** solves
 |:---:|:---|:---:|:---:|
 | 0.00 | interplanetary transit | 1.29 | vulnerable |
 | 0.16 | **Moon** | ≈1.07 | vulnerable |
-| 0.38 | **Mars** | 0.81 | protected |
+| 0.38 | **Mars** | 0.82 | below threshold (analytic only — sheet does not confirm) |
 | 1.00 | Earth | 0.47 | safe |
 
 The crossing sits at **`g* ≈ 0.22`, between the Moon and Mars** — a concrete,
