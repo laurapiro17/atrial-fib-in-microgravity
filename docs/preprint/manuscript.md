@@ -72,6 +72,8 @@ Across a 10-seed fibrosis ensemble (160×160 sheet, 800 ms, S1–S2 induction):
 
 Healthy tissue conducted the induced wavefronts cleanly (zero phase-singularity formation in every realisation). The microgravity-remodelled fibrotic substrate fragmented wavefronts into transient phase singularities in every realisation. [Figure 2: PS(t) ground vs microgravity with bootstrap band. Figure 3: late-state V snapshots — quiescent ground vs fragmented microgravity.]
 
+**Mechanism isolation.** Toggling each remodelling component alone (Figure 4) showed that neither AF-type electrical remodelling alone (0 PS·ms) nor dilation alone (0 PS·ms) produced wavebreak. Fibrosis alone produced modest, high-variance wavebreak (234 PS·ms, 95% CI 29–454); the full combination produced 1085 PS·ms (95% CI 833–1345) — an ≈4.6× amplification of the fibrotic substrate by the shortened-wavelength electrical remodelling. Thus fibrosis is *necessary* for wavefront fragmentation, while the electrical remodelling acts *synergistically* to amplify it — re-entrant vulnerability emerges from the structural×electrical interaction, not from either change alone.
+
 **Validation that the effect is real, not a detection artifact.** (i) The phase-singularity detector was verified to return exactly 1 on a single synthetic spiral and 0 on planar and static-structural-step fields (`tests/test_ps_detector.py`). (ii) An artifact control evolved the microgravity fibrotic substrate under a single S1 wave with **no** re-entry induction: once the wave cleared, the phase-singularity count returned to **zero** in all seeds — confirming that the headline count reflects genuine wave fragmentation rather than singularities pinned to fibrosis edges.
 
 ### 3.3 Transience

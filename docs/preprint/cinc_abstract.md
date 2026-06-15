@@ -60,7 +60,9 @@ restitution-slope and fibrosis-threshold analyses dissect the effect.
 - Wavebreak burden: ground 0 PS·ms (95 % CI 0–0); microgravity
   1192 PS·ms (95 % CI 1031–1319); seeds with wavebreak 10/10 vs 0/10.
   Detector specificity and an artifact control confirm the effect is real.
-- Mechanism isolation: dominant driver = [TO FILL] [Figure 2].
+- Mechanism isolation: electrical remodelling alone 0 and dilation alone 0 PS·ms;
+  fibrosis alone 234 (95% CI 29-454); combined 1085 (833-1345) -> fibrosis is
+  necessary, electrical remodelling amplifies it ~4.6x (synergy) [Figure 2].
 - Vulnerable-window width: ground [TO FILL] ms vs microgravity [TO FILL] ms.
 - APD restitution max slope: ground [TO FILL] vs microgravity [TO FILL].
 - Critical fibrosis density for wavebreak ≈ [TO FILL].
