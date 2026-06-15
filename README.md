@@ -21,10 +21,16 @@ shortened refractoriness — makes the atrium fragment wavefronts into re-entran
 > clinical picture: increased vulnerability without observed sustained AF
 > (Khine et al., 2018).
 
-| Ground atrium (1 g) | Microgravity-remodelled atrium |
+![ground vs microgravity, S1-S2 induction](figures/anim_crn.gif)
+
+*Same S1–S2 induction in both: the healthy sheet (left) activates and clears cleanly;
+the microgravity-remodelled sheet (right) fragments into heterogeneous, short-lived
+wavelets.*
+
+| Ground atrium (1 g), t = 200 ms | Microgravity-remodelled atrium, t = 200 ms |
 |:---:|:---:|
 | ![ground](figures/snapshot_crn_ground.png) | ![microgravity](figures/snapshot_crn_microgravity.png) |
-| wavefront conducts cleanly | wavefront fragments into rotor cores |
+| uniform, organised activation | fragmented, heterogeneous wavelets (wavebreak) |
 
 ![wavebreak over time](figures/ensemble_ps.png)
 
