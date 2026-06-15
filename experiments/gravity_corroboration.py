@@ -36,6 +36,7 @@ from afib_microgravity.crn import CRNCell  # noqa: E402
 from afib_microgravity.diffusion import AnisotropicDiffusion  # noqa: E402
 from afib_microgravity.fibrosis import correlated_fibrosis  # noqa: E402
 from afib_microgravity.metrics import (  # noqa: E402
+    bootstrap_ci,
     count_phase_singularities,
     ps_density,
 )
@@ -49,7 +50,6 @@ RESULTS = os.path.join(FIG, "results_crn.json")
 V_DEPOL = 20.0
 V0 = -40.0
 DELAY_MS = 30.0
-SEED = 0
 
 
 def crn_phase(V_now, V_delayed):
@@ -64,12 +64,12 @@ def induce_broken_wavefront(cell):
     cell.stimulate(mask, V_DEPOL)
 
 
-def run_sheet_for_gravity(g, base_grid, dt, n_steps, record_every):
+def run_sheet_for_gravity(g, base_grid, dt, n_steps, record_every, seed=0):
     rem = gravity_to_remodeling(g)
     n = int(base_grid * rem.dilation)
     shape = (n, n)
     cell = CRNCell(shape=shape, params=microgravity_crn_params(severity=rem.severity))
-    coupling = correlated_fibrosis(shape, density=rem.density, corr_len=4.0, seed=SEED)
+    coupling = correlated_fibrosis(shape, density=rem.density, corr_len=4.0, seed=seed)
     diff = AnisotropicDiffusion(shape=shape, d_long=0.06, d_trans=0.02,
                                 theta=np.zeros(shape), dx=0.25, coupling=coupling)
     sheet = MonodomainSheet(cell, diff, dt=dt)
@@ -95,6 +95,8 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--full", action="store_true")
     ap.add_argument("--dt", type=float, default=0.02)
+    ap.add_argument("--seeds", type=int, default=1,
+                    help="fibrosis realisations per gravity level (>1 enables bootstrap CI)")
     args = ap.parse_args()
 
     gs = [0.0, 0.16, 0.38, 0.5, 0.8, 1.0]
@@ -103,11 +105,21 @@ def main():
     else:
         base_grid, n_steps, record_every = 40, 400, 20
 
-    psd = []
+    seeds = list(range(args.seeds))
+    psd = []            # per-g mean PS density
+    psd_lo, psd_hi = [], []   # per-g bootstrap 95% CI bounds
+    psd_seeds = []      # per-g list of per-seed values
     for g in gs:
-        d = run_sheet_for_gravity(g, base_grid, args.dt, n_steps, record_every)
-        psd.append(d)
-        print(f"  g={g:.2f}  ps_density={d:.2f}", flush=True)
+        per_seed = [run_sheet_for_gravity(g, base_grid, args.dt, n_steps,
+                                          record_every, seed=s) for s in seeds]
+        mean, lo, hi = bootstrap_ci(per_seed) if len(per_seed) > 1 \
+            else (per_seed[0], per_seed[0], per_seed[0])
+        psd.append(mean)
+        psd_lo.append(lo)
+        psd_hi.append(hi)
+        psd_seeds.append(per_seed)
+        ci = f" (95% CI {lo:.2f}-{hi:.2f}, n={len(per_seed)})" if len(per_seed) > 1 else ""
+        print(f"  g={g:.2f}  ps_density={mean:.2f}{ci}", flush=True)
 
     # overlay N_g from the sweep, if present
     ng = None
@@ -120,6 +132,9 @@ def main():
 
     fig, ax1 = plt.subplots(figsize=(6.5, 4.2))
     ax1.plot(gs, psd, "o-", color="#d65a31", lw=2, label="rotor burden (PS density)")
+    if len(seeds) > 1:
+        ax1.fill_between(gs, psd_lo, psd_hi, color="#d65a31", alpha=0.18,
+                         label="95% CI (bootstrap)")
     ax1.set_xlabel("gravitational level  g  (Earth-g units)")
     ax1.set_ylabel("PS density (/1e4 cells)", color="#d65a31")
     if ng is not None and all(v is not None for v in ng):
@@ -139,8 +154,10 @@ def main():
             data = json.load(f)
     data["gravity_corroboration"] = {
         "mode": "full" if args.full else "smoke",
-        "base_grid": base_grid, "n_steps": n_steps,
+        "base_grid": base_grid, "n_steps": n_steps, "n_seeds": len(seeds),
         "g": gs, "ps_density_x1e4": psd,
+        "ps_density_ci_lo": psd_lo, "ps_density_ci_hi": psd_hi,
+        "ps_density_per_seed": psd_seeds,
     }
     with open(RESULTS, "w") as f:
         json.dump(data, f, indent=2)

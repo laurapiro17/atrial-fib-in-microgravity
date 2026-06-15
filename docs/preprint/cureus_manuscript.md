@@ -5,9 +5,8 @@ Format: structured abstract (Background/Methods/Results/Conclusions), keywords,
 Introduction, Materials And Methods, Results, Discussion, Conclusions, then the
 mandatory "Additional Information" disclosures block, and numbered references in
 Cureus/AMA style with DOIs.
-NOTE: §Results corroboration values are the full single-seed run; the multi-seed
-bootstrap mean ± 95% CI is being computed and will replace them before submission.
 -->
+
 
 # A Gravitational Scaling Law for Atrial Re-Entrant Vulnerability: A Dimensionless Predictor of the Critical Gravity for Spaceflight Atrial Fibrillation
 
@@ -69,7 +68,18 @@ We treat gravity as a continuous variable and compress the question into a singl
 | 0.50 | — | 219.8 | 12.75 | 0.72 |
 | 1.00 | Earth | 294.1 | 17.06 | 0.47 |
 
-The full reaction–diffusion sheet reproduced the direction of the law: rotor burden (phase-singularity density) was zero at Earth and rose as gravity fell. The models agree at the extremes and in direction; they differ in sharpness, the analytic threshold being crisp at g* ≈ 0.22 while the sheet shows a gradual transition with residual rotors at the Mars level.
+The full reaction–diffusion sheet (6-seed ensemble per gravity level, bootstrap 95% CI) reproduced the direction of the law (Table 1b): rotor burden was comparably high across transit, the Moon and Mars (≈9–12 ×10⁻⁴), fell sharply between 0.5 and 0.8 g, and was exactly zero at Earth (CI 0–0). The models agree at the extremes and in direction but differ in where the transition completes: the analytic threshold is crisp at g* ≈ 0.22, while the spatially resolved model is more pessimistic, sustaining rotors through the Mars level and approaching zero only near 0.5–0.6 g. The single-cell argument is thus an optimistic bound on the vulnerable gravity range.
+
+*Table 1b: Full-sheet rotor burden (6-seed ensemble, mean and bootstrap 95% CI).*
+
+| g (Earth-g) | Body | PS density ×10⁻⁴ (mean, 95% CI) |
+|:---:|:---|:---:|
+| 0.00 | Interplanetary transit | 9.05 (8.14–9.81) |
+| 0.16 | Moon | 11.51 (8.87–14.24) |
+| 0.38 | Mars | 10.85 (9.14–12.43) |
+| 0.50 | — | 4.76 (3.30–5.86) |
+| 0.80 | — | 0.21 (0.00–0.62) |
+| 1.00 | Earth | 0.00 (0.00–0.00) |
 
 g* was robust to the assumed fluid-shift map shape (g* ∈ [0.13, 0.34] for p ∈ {0.5, 1, 2}) but depended strongly on atrial path length: no crossing (no vulnerability at any gravity) for L₀ = 6 cm, g* = 0.22 at 8 cm, 0.41 at 10 cm, and 0.58 at 12 cm — at which point Mars itself becomes vulnerable (Table 2).
 

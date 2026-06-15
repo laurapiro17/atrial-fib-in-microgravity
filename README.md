@@ -116,10 +116,12 @@ Re-entry can be hosted when `𝒩_g ≳ 1`; the **critical gravity `g*`** solves
 | 1.00 | Earth | 0.47 | safe |
 
 The crossing sits at **`g* ≈ 0.22`, between the Moon and Mars** — a concrete,
-falsifiable prediction. The full 2-D sheet corroborates the trend independently:
-rotor burden (phase-singularity density) rises as gravity falls and is **exactly
-zero at Earth**, though the transition is gradual rather than a sharp threshold
-(some residual rotors persist at the Mars level).
+falsifiable prediction. The full 2-D sheet (6-seed ensemble, bootstrap 95% CI)
+corroborates the trend independently: rotor burden (phase-singularity density) is
+comparably high across transit/Moon/Mars (≈9–12 ×10⁻⁴), falls sharply between 0.5
+and 0.8 g, and is **exactly zero at Earth** (CI 0–0). The full model is in fact
+*more pessimistic* than the analytic threshold — it sustains rotors through the
+Mars level — so `𝒩_g` is an optimistic bound on the vulnerable gravity range.
 
 **Robust to the map shape, sensitive to atrial size.** Varying the fluid-shift
 drive exponent `p` in `(1−g)^p` leaves `g* ∈ [0.13, 0.34]`. But `g*` depends

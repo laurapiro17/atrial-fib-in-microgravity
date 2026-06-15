@@ -70,7 +70,18 @@ The continuous map `g → remodelling` is deliberately the simplest hypothesis c
 | 0.50 | — | 219.8 | 12.75 | 0.72 |
 | 1.00 | Earth | 294.1 | 17.06 | 0.47 |
 
-**Independent corroboration.** The full reaction–diffusion sheet reproduced the direction of the law: rotor burden (phase-singularity density, ×10⁻⁴ cells) was 0.00 at Earth, rising to 4.44 at 0.5 g, 11.92 at Mars, 14.76 at the Moon, and 9.74 in free fall. The two models agree at the extremes (clean conduction at Earth; vulnerability at low gravity) and on the direction of change. They differ in sharpness: the analytic threshold is crisp at `g* ≈ 0.22`, whereas the sheet shows a **gradual** transition with residual rotors at the Mars level — i.e., the single-cell wavelength argument is somewhat more optimistic about Mars than the spatially resolved model. The non-monotonic dip at 0 g vs the Moon is within single-realisation noise (one fibrosis seed).
+**Independent corroboration.** The full reaction–diffusion sheet, run as an ensemble of 6 fibrosis realisations per gravity level (bootstrap 95% CI), reproduced the direction of the law (Table 1b). Rotor burden was comparably high across transit, the Moon and Mars (≈9–12 ×10⁻⁴), fell sharply between 0.5 and 0.8 g, and was **exactly zero at Earth** (CI 0–0). The two models agree at the extremes (clean conduction at Earth; vulnerability at low gravity) and on the direction of change, but differ in where the transition completes: the analytic threshold is crisp at `g* ≈ 0.22`, whereas the spatially resolved model is **more pessimistic**, sustaining rotors through the Mars level and crossing toward zero only around 0.5–0.6 g. The single-cell wavelength argument is therefore an optimistic bound; the full model widens, rather than narrows, the vulnerable gravity range.
+
+**Table 1b. Full-sheet rotor burden (6-seed ensemble, mean and bootstrap 95% CI).**
+
+| g (Earth-g) | body | PS density ×10⁻⁴ (mean, 95% CI) |
+|:---:|:---|:---:|
+| 0.00 | transit | 9.05 (8.14–9.81) |
+| 0.16 | Moon | 11.51 (8.87–14.24) |
+| 0.38 | Mars | 10.85 (9.14–12.43) |
+| 0.50 | — | 4.76 (3.30–5.86) |
+| 0.80 | — | 0.21 (0.00–0.62) |
+| 1.00 | Earth | 0.00 (0.00–0.00) |
 
 **Sensitivity (Table 2).** `g*` was robust to the map shape (`g* ∈ [0.13, 0.34]` for `p ∈ {0.5, 1, 2}`) but strongly dependent on atrial size: no crossing (no vulnerability at any gravity) for `L₀ = 6 cm`, `g* = 0.22` at 8 cm, 0.41 at 10 cm, and 0.58 at 12 cm — at which point Mars itself becomes vulnerable.
 
@@ -95,13 +106,13 @@ The most decision-relevant finding is the **strong dependence on atrial size**. 
 ## 7. Limitations (read this before believing the headline)
 
 - **The `g → stretch` link is the weakest.** The map uses acute-stretch mechano-electric sensitivities as a stand-in for chronic adaptation; the linear form is a hypothesis, not data. This is the first thing a partial-gravity experiment should test.
-- **Single ionic model, 2-D, single fibrosis seed** for corroboration; no autonomic dynamics, no 3-D atrial geometry. The sheet result is a direction-of-effect check, not a calibrated incidence estimate.
+- **Single ionic model, 2-D** for corroboration (6-seed ensemble, but no autonomic dynamics and no 3-D atrial geometry). The sheet result is a direction-of-effect check, not a calibrated incidence estimate.
 - **`𝒩_g` is proposed, not proven.** It is a scaling argument validated in silico; it is not a theorem, and the analytic threshold is more optimistic about Mars than the full model.
 - **No human partial-gravity electrophysiology exists** to fix the absolute value of `g*`. The headline `g* ≈ 0.22` is conditional on `L₀ ≈ 8 cm` and the calibration choices above.
 
 ## 8. Falsifiability and next steps
 
-The framework is falsifiable: if partial-gravity (centrifuge or lunar/Mars-analog) measurements of atrial APD₉₀, CV and effective path length yield `𝒩_g` that does not cross unity within `[0, 1] g`, or crosses it far from the predicted band, the law is wrong. The immediate computational next steps are an ensembled, multi-seed sheet corroboration with confidence bands and a dispersion-of-refractoriness term in `𝒩_g`.
+The framework is falsifiable: if partial-gravity (centrifuge or lunar/Mars-analog) measurements of atrial APD₉₀, CV and effective path length yield `𝒩_g` that does not cross unity within `[0, 1] g`, or crosses it far from the predicted band, the law is wrong. The immediate computational next steps are a dispersion-of-refractoriness term in `𝒩_g` and a 3-D, autonomically driven atrial model.
 
 ## References
 
