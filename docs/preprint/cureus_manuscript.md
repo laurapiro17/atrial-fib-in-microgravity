@@ -13,7 +13,7 @@ bootstrap mean ± 95% CI is being computed and will replace them before submissi
 
 **Laura Piñero Roig ¹**
 
-¹ Faculty of Medicine, University of Barcelona, Barcelona, ESP
+¹ Medical Student, Faculty of Medicine, University of Barcelona, Barcelona, ESP
 
 **Corresponding author:** Laura Piñero Roig · ORCID 0009-0008-3390-4029
 
@@ -101,7 +101,7 @@ A dimensionless Cardiac Gravitational Number predicts a critical gravity for atr
 
 **Author Contributions:** LPR conceived the hypothesis, designed and implemented the model and analyses, produced the figures, and wrote the manuscript.
 
-**Disclosures:** *Human subjects:* All authors have confirmed that this study did not involve human participants or tissue. *Animal subjects:* All authors have confirmed that this study did not involve animal subjects or tissue. *Conflicts of interest:* In compliance with the ICMJE uniform disclosure form, the author declares no conflicts of interest. *Financial relationships:* The author declares no financial relationships with any organizations that might have an interest in the submitted work. <!-- Laura: optionally acknowledge the "la Caixa" Foundation fellowship as general support here. --> *Other relationships:* The author declares no other relationships or activities that could appear to have influenced the submitted work.
+**Disclosures:** *Human subjects:* All authors have confirmed that this study did not involve human participants or tissue. *Animal subjects:* All authors have confirmed that this study did not involve animal subjects or tissue. *Conflicts of interest:* In compliance with the ICMJE uniform disclosure form, the author declares no conflicts of interest. *Financial relationships:* The author declares no financial relationships with any organizations that might have an interest in the submitted work. *Other relationships:* The author declares no other relationships or activities that could appear to have influenced the submitted work.
 
 **Data Availability:** All code, parameters, and scripts that reproduce every figure and number are openly available at https://github.com/laurapiro17/atrial-fib-in-microgravity.
 

@@ -13,7 +13,7 @@ bootstrap CI is being computed and will replace them before submission.
 
 **Laura Piñero Roig¹\***
 
-¹ Faculty of Medicine, University of Barcelona, Barcelona, Spain
+¹ Medical student, Faculty of Medicine, University of Barcelona, Barcelona, Spain
 
 **\* Correspondence:** Laura Piñero Roig · ORCID 0009-0008-3390-4029
 
@@ -132,7 +132,6 @@ LPR conceived the hypothesis, designed and implemented the model and analyses, p
 
 ## Funding
 
-<!-- Laura: confirm whether to acknowledge the "la Caixa" Foundation fellowship here, or leave as "no specific funding". -->
 The author declares that no specific grant was received for this work from any funding agency in the public, commercial, or not-for-profit sectors.
 
 ## Conflict of Interest

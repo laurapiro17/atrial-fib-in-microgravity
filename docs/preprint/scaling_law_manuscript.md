@@ -1,7 +1,7 @@
 # A gravitational scaling law for atrial re-entrant vulnerability: a dimensionless predictor of the critical gravity for spaceflight atrial fibrillation
 
 **Laura Piñero Roig**¹
-¹ Faculty of Medicine, University of Barcelona, Barcelona, Spain · ORCID 0009-0008-3390-4029
+¹ Medical student, Faculty of Medicine, University of Barcelona, Barcelona, Spain · ORCID 0009-0008-3390-4029
 
 *Preprint draft — not peer reviewed. All figures and numbers are generated reproducibly from the accompanying code (github.com/laurapiro17/atrial-fib-in-microgravity). This is a hypothesis paper with in-silico support; it proposes and tests a scaling argument, it does not prove a law.*
 
