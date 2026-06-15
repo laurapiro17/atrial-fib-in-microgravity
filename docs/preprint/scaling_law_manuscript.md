@@ -11,7 +11,7 @@
 
 **Background.** Long-duration spaceflight remodels the atrium and raises markers of atrial-fibrillation (AF) risk (Khine et al., 2018), yet whether reduced gravity has a *threshold* below which an arrhythmogenic substrate emerges — and where that threshold lies relative to the Moon and Mars — is unknown. Cardiac physiology has scaling laws with body mass but none with gravitational acceleration.
 
-**Hypothesis.** We propose that the atrium's proximity to sustainable re-entry is governed by a single dimensionless quantity, the **Cardiac Gravitational Number** `𝒩_g = L₀·dilation(g) / WL(g)`, where `WL = CV·APD₉₀` is the electrical wavelength and `g` is gravitational level in Earth-g units. Re-entry can be hosted when `𝒩_g ≳ 1`, defining a **critical gravity `g*`** with `𝒩_g(g*) = 1`.
+**Hypothesis.** Building on the classical wavelength hypothesis of re-entry (Rensma et al., 1988), we recast the path-length-to-wavelength ratio as an explicit function of gravity — the **Cardiac Gravitational Number** `𝒩_g = L₀·dilation(g) / WL(g)`, where `WL = CV·APD₉₀` is the electrical wavelength and `g` is gravitational level in Earth-g units. The novelty is the gravity parametrisation and the resulting threshold, not the underlying re-entry criterion. Re-entry can be hosted when `𝒩_g ≳ 1`, defining a **critical gravity `g*`** with `𝒩_g(g*) = 1`.
 
 **Methods.** A continuous, literature-anchored map sends `g` to atrial remodelling through the cephalad fluid-shift drive `(1 − g)`, calibrated so `g=1` recovers a validated ground baseline and `g=0` recovers an established microgravity operating point. Single-cell APD₉₀ was measured with the Courtemanche–Ramirez–Nattel (CRN) human-atrial ionic model across the remodelling continuum (one vectorised pacing run), forming `𝒩_g(g)`. The prediction was independently corroborated in a 2-D monodomain reaction–diffusion sheet (fibre-anisotropic conduction calibrated to ≈58 cm/s) by measuring rotor (phase-singularity) burden at each gravity level. Sensitivity to the two main assumptions (atrial path length `L₀`; fluid-shift map shape) was quantified.
 
@@ -46,6 +46,8 @@ We define the **Cardiac Gravitational Number**
 
 with `L₀` the ground atrial characteristic path length (human left-atrial circumference ≈ 8–12 cm; nominal 8 cm) and `CV ≈ 58 cm/s` the calibrated planar conduction velocity. As `g → 0` the fluid-shift drive `(1 − g)` increases remodelling, shortening APD₉₀ (hence `WL`) and increasing dilation, so `𝒩_g` rises. Re-entry can be hosted when `𝒩_g ≳ 1`; the **critical gravity `g*`** solves `𝒩_g(g*) = 1`.
 
+**This is not a new re-entry criterion.** The ratio of available path length to electrical wavelength is the classical *wavelength hypothesis* of re-entry (Rensma et al., 1988; Allessie and colleagues): re-entry is supported when the path exceeds one wavelength `WL = CV·refractory period`. Rensma et al. measured, in conscious dogs, a normal atrial wavelength of 14–18 cm and the induction of atrial fibrillation below ≈7.8 cm. **What is new here is not the quantity `L/WL` but its parametrisation by gravitational acceleration and the resulting critical gravity `g*`**: we turn a known reentry criterion into an explicit, falsifiable function of `g`. Naming it the "Cardiac Gravitational Number" is a convenience, not a claim of a new physical law.
+
 The continuous map `g → remodelling` is deliberately the simplest hypothesis consistent with the endpoints: severity, dilation and fibrosis density scale linearly with `(1 − g)`, calibrated so `g = 1` recovers the validated ground baseline and `g = 0` recovers the project's microgravity operating point. The linear form and the mechano-electric sensitivities are assumptions, examined in §6.
 
 ## 4. Methods
@@ -69,6 +71,8 @@ The continuous map `g → remodelling` is deliberately the simplest hypothesis c
 | 0.38 | Mars | ≈202 | ≈11.7 | ≈0.82 |
 | 0.50 | — | 219.8 | 12.75 | 0.72 |
 | 1.00 | Earth | 294.1 | 17.06 | 0.47 |
+
+**The absolute wavelengths land on measured values.** Although the model was not calibrated to wavelength data, its Earth wavelength (17.1 cm) falls squarely in the normal atrial range measured by Rensma et al. (14–18 cm in conscious dogs), and its free-fall wavelength (8.1 cm) sits right at their empirical AF-induction threshold (≈7.8 cm). The framework therefore reproduces, unprompted, the experimental wavelengths at which atrial fibrillation does and does not occur — a cross-species but quantitatively striking consistency check.
 
 **Independent corroboration.** The full reaction–diffusion sheet, run as an ensemble of 6 fibrosis realisations per gravity level (bootstrap 95% CI), reproduced the direction of the law (Table 1b). Rotor burden was comparably high across transit, the Moon and Mars (≈9–12 ×10⁻⁴), fell sharply between 0.5 and 0.8 g, and was **exactly zero at Earth** (CI 0–0). The two models agree at the extremes (clean conduction at Earth; vulnerability at low gravity) and on the direction of change, but differ in where the transition completes: the analytic threshold is crisp at `g* ≈ 0.22`, whereas the spatially resolved model is **more pessimistic**, sustaining rotors through the Mars level and crossing toward zero only around 0.5–0.6 g. The single-cell wavelength argument is therefore an optimistic bound; the full model widens, rather than narrows, the vulnerable gravity range.
 
@@ -118,4 +122,6 @@ The framework is falsifiable: if partial-gravity (centrifuge or lunar/Mars-analo
 
 - Khine HW, Steding-Ehrenborg K, Hastings JL, et al. Effects of Prolonged Spaceflight on Atrial Size, Atrial Electrophysiology, and Risk of Atrial Fibrillation. *Circ Arrhythm Electrophysiol.* 2018;11(5):e005959. https://doi.org/10.1161/CIRCEP.117.005959
 - Ravelli F. Mechano-electric feedback and atrial fibrillation. *Prog Biophys Mol Biol.* 2003;82(1-3):137-149. https://doi.org/10.1016/s0079-6107(03)00011-7
-- Courtemanche M, Ramirez RJ, Nattel S. Ionic mechanisms underlying human atrial action potential properties. *Am J Physiol.* 1998;275(1):H301–21.
+- Courtemanche M, Ramirez RJ, Nattel S. Ionic mechanisms underlying human atrial action potential properties. *Am J Physiol.* 1998;275(1):H301–21. https://doi.org/10.1152/ajpheart.1998.275.1.H301
+- Rensma PL, Allessie MA, Lammers WJ, Bonke FI, Schalij MJ. Length of excitation wave and susceptibility to reentrant atrial arrhythmias in normal conscious dogs. *Circ Res.* 1988;62(2):395-410. https://doi.org/10.1161/01.res.62.2.395
+- Mircea AA, Pistritu DV, Fortner A, et al. Space Travel: The Radiation and Microgravity Effects on the Cardiovascular System. *Int J Mol Sci.* 2024;25(21):11812. https://doi.org/10.3390/ijms252111812
